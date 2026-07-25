@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UMBRAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:  #FBFAF7;
+    --ink:    #1A1916;
+    --ash:    #8E8B82;
+    --pale:   #CFCCC4;
+    --rule:   #E5E2DA;
+
+    --edge: 88px;
+    --measure: 1280px;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html{ background:var(--paper); }
+
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Jost', sans-serif;
+    font-weight:400;
+    -webkit-font-smoothing:antialiased;
+    max-width:var(--measure);
+    margin:0 auto;
+    padding:56px var(--edge) 160px;
+  }
+
+  .cap{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:300;
+    font-size:10px;
+    letter-spacing:0.24em;
+    text-transform:uppercase;
+    color:var(--ash);
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:40px;
+    padding-bottom:28px;
+    border-bottom:1px solid var(--ink);
+  }
+  .wordmark{
+    font-family:'Jost', sans-serif;
+    font-weight:200;
+    font-size:clamp(48px, 7vw, 92px);
+    line-height:0.9;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--ink);
+  }
+  .masthead .ident{
+    text-align:right;
+    line-height:2.1;
+    white-space:nowrap;
+  }
+  .masthead .ident b{ color:var(--ink); font-weight:400; }
+
+  /* ---------- signature: threshold band ---------- */
+  .band{
+    padding:44px 0 0;
+    border-bottom:1px solid var(--rule);
+    margin-bottom:64px;
+  }
+  .band-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:26px;
+  }
+  .chart{
+    position:relative;
+    height:148px;
+    display:flex;
+    align-items:flex-end;
+    gap:2px;
+    padding-bottom:28px;
+  }
+  .threshold-line{
+    position:absolute;
+    left:0; right:0;
+    bottom:calc(28px + (120px * 0.67));
+    border-top:1px solid var(--ink);
+    pointer-events:none;
+  }
+  .threshold-line span{
+    position:absolute;
+    right:0;
+    top:-19px;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:300;
+    font-size:9px;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:var(--ink);
+    background:var(--paper);
+    padding-left:10px;
+  }
+  .tick{
+    flex:1;
+    min-width:2px;
+    background:var(--pale);
+    position:relative;
+  }
+  .tick.over{ background:var(--ink); }
+  .chart-axis{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    display:flex;
+    justify-content:space-between;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:300;
+    font-size:9px;
+    letter-spacing:0.16em;
+    color:var(--ash);
+    padding-top:10px;
+    border-top:1px solid var(--rule);
+  }
+
+  /* ---------- readings ---------- */
+  .readings{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:1px;
+    background:var(--rule);
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    margin-bottom:96px;
+  }
+  .reading{
+    background:var(--paper);
+    padding:30px 28px 34px 0;
+  }
+  .reading .k{ display:block; margin-bottom:22px; }
+  .reading .v{
+    font-family:'Jost', sans-serif;
+    font-weight:200;
+    font-size:60px;
+    line-height:0.86;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+  }
+  .reading .v u{
+    text-decoration:none;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:300;
+    font-size:11px;
+    letter-spacing:0.12em;
+    color:var(--ash);
+    margin-left:6px;
+    vertical-align:super;
+  }
+  .reading.under .v{ color:var(--pale); }
+
+  /* ---------- log ---------- */
+  .log-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    padding-bottom:18px;
+    border-bottom:1px solid var(--ink);
+    margin-bottom:0;
+  }
+
+  .entry{
+    display:grid;
+    grid-template-columns:132px 1fr 200px;
+    gap:36px;
+    padding:38px 0;
+    border-bottom:1px solid var(--rule);
+    align-items:start;
+  }
+  .entry .stamp{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:300;
+    font-size:10px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--ink);
+    line-height:2;
+  }
+  .entry .stamp em{
+    display:block;
+    font-style:normal;
+    color:var(--ash);
+  }
+  .entry .col-main{ min-width:0; }
+  .entry .vitals{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:300;
+    font-size:10px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--ash);
+    padding-bottom:16px;
+    border-bottom:1px solid var(--rule);
+    margin-bottom:18px;
+    display:flex;
+    gap:26px;
+    flex-wrap:wrap;
+  }
+  .entry .vitals i{ font-style:normal; color:var(--ink); }
+  .entry .vitals i.over{ font-weight:400; }
+
+  .entry .session{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:300;
+    font-size:10px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--ink);
+    margin-bottom:14px;
+    line-height:2;
+  }
+  .entry .note{
+    font-family:'Jost', sans-serif;
+    font-weight:300;
+    font-size:17px;
+    line-height:1.6;
+    color:var(--ink);
+    max-width:54ch;
+  }
+  .entry .note.void{ color:var(--pale); font-weight:200; }
+
+  /* photography is the only colour in the interface */
+  .entry .plates{ display:grid; grid-template-columns:1fr 1fr; gap:4px; }
+  .entry .plates img{
+    width:100%;
+    aspect-ratio:3/4;
+    object-fit:cover;
+    display:block;
+  }
+  .entry .plates:empty{ display:none; }
+
+  .void-state{
+    padding:120px 0;
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:300;
+    font-size:10px;
+    letter-spacing:0.24em;
+    text-transform:uppercase;
+    color:var(--pale);
+    line-height:2.6;
+  }
+
+  footer{
+    margin-top:88px;
+    padding-top:24px;
+    border-top:1px solid var(--ink);
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+  }
+  footer a{ color:var(--ink); text-decoration:none; border-bottom:1px solid var(--ink); padding-bottom:2px; }
+  footer a:hover{ color:var(--ash); border-color:var(--ash); }
+
+  :focus-visible{ outline:1px solid var(--ink); outline-offset:4px; }
+
+  @media (max-width:1100px){
+    :root{ --edge:48px; }
+    .entry{ grid-template-columns:110px 1fr; }
+    .entry .plates{ grid-column:2; grid-template-columns:repeat(4,1fr); margin-top:18px; }
+  }
+  @media (max-width:720px){
+    :root{ --edge:22px; }
+    body{ padding-top:36px; }
+    .masthead{ flex-direction:column; align-items:flex-start; gap:22px; }
+    .masthead .ident{ text-align:left; }
+    .readings{ grid-template-columns:1fr 1fr; }
+    .reading{ padding-right:16px; }
+    .reading .v{ font-size:44px; }
+    .entry{ grid-template-columns:1fr; gap:16px; }
+    .entry .plates{ grid-column:1; grid-template-columns:repeat(3,1fr); }
+  }
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <h1 class="wordmark">Umbral</h1>
+    <div class="ident cap">
+      <div>Hyrox Solo — <b>Sub 1:30:00</b></div>
+      <div>Madrid — <b id="today">—</b></div>
+      <div>Restan <b id="countdown">—</b> días</div>
+    </div>
+  </header>
+
+  <section class="band">
+    <div class="band-head">
+      <span class="cap">Recuperación — últimos 30 días</span>
+      <span class="cap" id="over-count">—</span>
+    </div>
+    <div class="chart" id="chart">
+      <div class="threshold-line"><span>Umbral 67</span></div>
+      <div class="chart-axis"><span id="axis-from">—</span><span id="axis-to">—</span></div>
+    </div>
+  </section>
+
+  <section class="readings" id="readings"></section>
+
+  <div class="log-head">
+    <span class="cap">Registro</span>
+    <span class="cap" id="entry-count">—</span>
+  </div>
+  <section id="log"></section>
+
+  <footer>
+    <span class="cap">WHOOP v2 — sincroniza 08:00 UTC</span>
+    <span class="cap"><a href="admin.html">Añadir entrada</a></span>
+  </footer>
+
+<script>
+const RACE_DATE = '2026-12-12';
+const THRESHOLD = 67;
+const DASH = '\u2014';
+
+const $ = (id) => document.getElementById(id);
+
+function fmtStamp(iso){
+  const d = new Date(iso + 'T00:00:00');
+  return {
+    day: d.toLocaleDateString('es-ES', { day:'2-digit', month:'short' }).replace('.', ''),
+    wd:  d.toLocaleDateString('es-ES', { weekday:'long' }),
+  };
+}
+
+function readingCell(k, v, unit, under){
+  return `<div class="reading${under ? ' under' : ''}">
+    <span class="k cap">${k}</span>
+    <span class="v">${v ?? DASH}${unit ? `<u>${unit}</u>` : ''}</span>
+  </div>`;
+}
+
+function renderReadings(day){
+  if (!day){
+    $('readings').innerHTML =
+      readingCell('Recuperación', null, '%', true) +
+      readingCell('VFC', null, 'ms', true) +
+      readingCell('Sueño', null, '%', true) +
+      readingCell('Carga', null, '', true);
+    return;
+  }
+  const under = (day.recovery_score ?? 0) < THRESHOLD;
+  $('readings').innerHTML =
+    readingCell('Recuperación', day.recovery_score, '%', under) +
+    readingCell('VFC', day.hrv_rmssd_milli, 'ms', false) +
+    readingCell('Sueño', day.sleep_performance_percentage, '%', false) +
+    readingCell('Carga', day.day_strain, '', false);
+}
+
+function renderChart(days){
+  const chart = $('chart');
+  const line = chart.querySelector('.threshold-line');
+  const axis = chart.querySelector('.chart-axis');
+  const slice = days.slice(0, 30).reverse();
+
+  chart.innerHTML = '';
+  chart.appendChild(line);
+  chart.appendChild(axis);
+
+  if (!slice.length){
+    for (let i = 0; i < 30; i++){
+      const t = document.createElement('div');
+      t.className = 'tick';
+      t.style.height = '2px';
+      chart.insertBefore(t, axis);
+    }
+    $('over-count').textContent = DASH;
+    return;
+  }
+
+  let over = 0;
+  slice.forEach(d => {
+    const score = d.recovery_score;
+    const t = document.createElement('div');
+    t.className = 'tick';
+    if (score === null || score === undefined){
+      t.style.height = '2px';
+    } else {
+      if (score >= THRESHOLD){ over++; t.classList.add('over'); }
+      t.style.height = Math.max(120 * score / 100, 2) + 'px';
+      t.title = `${d.date} — ${score}%`;
+    }
+    chart.insertBefore(t, axis);
+  });
+
+  $('over-count').textContent = `${over} de ${slice.length} sobre umbral`;
+  $('axis-from').textContent = fmtStamp(slice[0].date).day;
+  $('axis-to').textContent = fmtStamp(slice[slice.length - 1].date).day;
+}
+
+function renderEntry(d){
+  const { day, wd } = fmtStamp(d.date);
+  const over = (d.recovery_score ?? 0) >= THRESHOLD;
+
+  const sessions = (d.workouts || []).map(w =>
+    `${w.sport_name || 'Sesión'} — ${w.duration_min ?? DASH} min — carga ${w.strain ?? DASH}`
+  ).join('<br>');
+
+  const plates = (d.photos || [])
+    .map(src => `<img src="${src}" alt="Sesión del ${d.date}" loading="lazy">`).join('');
+
+  const note = d.notes && d.notes.trim()
+    ? `<p class="note">${d.notes}</p>`
+    : `<p class="note void">Sin anotación</p>`;
+
+  return `<article class="entry">
+    <div class="stamp">${day}<em>${wd}</em></div>
+    <div class="col-main">
+      <div class="vitals">
+        <span>Rec <i class="${over ? 'over' : ''}">${d.recovery_score ?? DASH}</i></span>
+        <span>VFC <i>${d.hrv_rmssd_milli ?? DASH}</i></span>
+        <span>FC <i>${d.resting_heart_rate ?? DASH}</i></span>
+        <span>Carga <i>${d.day_strain ?? DASH}</i></span>
+      </div>
+      ${sessions ? `<div class="session">${sessions}</div>` : ''}
+      ${note}
+    </div>
+    <div class="plates">${plates}</div>
+  </article>`;
+}
+
+async function boot(){
+  const now = new Date();
+  $('today').textContent = now.toLocaleDateString('es-ES', { day:'2-digit', month:'short' }).replace('.', '');
+  const diff = Math.ceil((new Date(RACE_DATE) - now) / 86400000);
+  $('countdown').textContent = diff > 0 ? String(diff).padStart(3, '0') : '000';
+
+  let manifest = [];
+  try {
+    const r = await fetch('data/manifest.json', { cache:'no-store' });
+    if (r.ok) manifest = await r.json();
+  } catch (e) {}
+
+  const days = [];
+  for (const date of manifest){
+    try {
+      const r = await fetch(`data/${date}.json`, { cache:'no-store' });
+      if (r.ok) days.push(await r.json());
+    } catch (e) {}
+  }
+
+  renderChart(days);
+  renderReadings(days[0]);
+  $('entry-count').textContent = days.length ? `${days.length} entradas` : DASH;
+
+  $('log').innerHTML = days.length
+    ? days.map(renderEntry).join('')
+    : `<div class="void-state">Sin datos<br>El primer sync llenará esto</div>`;
+}
+
+boot();
+</script>
+</body>
+</html>

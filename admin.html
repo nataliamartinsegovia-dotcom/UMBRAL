@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UMBRAL — Nueva entrada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBFAF7; --ink:#1A1916; --ash:#8E8B82;
+    --pale:#CFCCC4; --rule:#E5E2DA;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ background:var(--paper); }
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:'Jost', sans-serif; -webkit-font-smoothing:antialiased;
+    max-width:600px; margin:0 auto; padding:40px 24px 120px; position:relative;
+  }
+
+  .wordmark{
+    font-family:'Jost', sans-serif; font-size:clamp(34px,7vw,56px);
+    line-height:0.84; letter-spacing:0.14em; text-transform:uppercase; font-weight:200;
+  }
+  .strapline{
+    font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:0.3em;
+    text-transform:uppercase; color:var(--ash); margin-top:12px;
+    padding-bottom:20px; border-bottom:1px solid var(--rule); margin-bottom:36px;
+  }
+
+  .group{ margin-bottom:36px; }
+  .group > legend, .group > .legend{
+    font-family:'IBM Plex Mono', monospace; font-size:9px; letter-spacing:0.28em;
+    text-transform:uppercase; color:var(--ash); display:block; margin-bottom:16px;
+    padding-bottom:10px; border-bottom:1px solid var(--rule); width:100%;
+  }
+  label{
+    display:block; font-family:'IBM Plex Mono', monospace; font-size:10px;
+    letter-spacing:0.14em; text-transform:uppercase; color:var(--ash); margin-bottom:8px;
+  }
+  input[type=text], input[type=password], input[type=date], textarea{
+    width:100%; background:var(--paper); color:var(--ink);
+    border:1px solid var(--rule); padding:12px 14px; margin-bottom:22px;
+    font-family:'Jost', sans-serif; font-size:15px;
+  }
+  input[type=date]{ font-family:'IBM Plex Mono', monospace; font-size:14px; color-scheme:light; }
+  textarea{ min-height:120px; resize:vertical; line-height:1.5; }
+  input:focus, textarea:focus{ outline:none; border-color:var(--ink); }
+  input[type=file]{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ash);
+    margin-bottom:22px; width:100%;
+  }
+  input[type=file]::file-selector-button{
+    background:transparent; color:var(--ink); border:1px solid var(--pale);
+    padding:8px 14px; margin-right:12px; font-family:'IBM Plex Mono', monospace;
+    font-size:10px; letter-spacing:0.14em; text-transform:uppercase; cursor:pointer;
+  }
+  button[type=submit]{
+    width:100%; background:var(--ink); color:var(--paper); border:none; padding:18px;
+    font-family:'IBM Plex Mono', monospace; font-size:11px; font-weight:400;
+    letter-spacing:0.24em; text-transform:uppercase; cursor:pointer;
+  }
+  button[type=submit]:disabled{ background:var(--pale); color:var(--paper); cursor:not-allowed; }
+  button[type=submit]:hover:not(:disabled){ filter:brightness(1.12); }
+
+  #status{
+    margin-top:22px; font-family:'IBM Plex Mono', monospace; font-size:11px;
+    letter-spacing:0.08em; line-height:1.8; white-space:pre-wrap; color:var(--ash);
+  }
+  #status.ok{ color:var(--ink); }
+  #status.err{ color:#8E8B82; }
+
+  details{ margin:-8px 0 28px; }
+  details summary{
+    font-family:'IBM Plex Mono', monospace; font-size:9px; letter-spacing:0.2em;
+    text-transform:uppercase; color:var(--pale); cursor:pointer;
+  }
+  details p{ font-size:13px; line-height:1.6; color:var(--ash); margin-top:12px; }
+
+  .back{
+    display:inline-block; margin-top:40px; font-family:'IBM Plex Mono', monospace;
+    font-size:9px; letter-spacing:0.2em; text-transform:uppercase;
+    color:var(--ash); text-decoration:none; border-bottom:1px solid var(--pale);
+  }
+  .back:hover{ color:var(--ink); border-color:var(--ink); }
+  :focus-visible{ outline:2px solid var(--ink); outline-offset:3px; }
+</style>
+</head>
+<body>
+
+  <div class="wordmark">Nueva<br>entrada</div>
+  <div class="strapline">Umbral · registro personal</div>
+
+  <form id="note-form">
+    <fieldset class="group">
+      <legend>Destino</legend>
+      <label for="owner">Usuario de GitHub</label>
+      <input type="text" id="owner" placeholder="tu-usuario" required autocomplete="off">
+      <label for="repo">Repositorio</label>
+      <input type="text" id="repo" placeholder="umbral" required autocomplete="off">
+      <label for="token">Token de acceso</label>
+      <input type="password" id="token" placeholder="github_pat_..." required autocomplete="off">
+      <details>
+        <summary>Cómo generar el token</summary>
+        <p>GitHub → Settings → Developer settings → Fine-grained personal access tokens →
+        Generate new token. Limítalo a este repositorio y dale permiso
+        <strong>Contents: Read and write</strong>. Se guarda solo en esta pestaña y
+        desaparece al cerrarla.</p>
+      </details>
+    </fieldset>
+
+    <fieldset class="group">
+      <legend>Sesión</legend>
+      <label for="date">Fecha</label>
+      <input type="date" id="date" required>
+      <label for="note">Anotación</label>
+      <textarea id="note" placeholder="Sensaciones, técnica, qué ajustar mañana..."></textarea>
+      <label for="photos">Imágenes</label>
+      <input type="file" id="photos" accept="image/*" multiple>
+    </fieldset>
+
+    <button type="submit" id="submit-btn">Guardar entrada</button>
+  </form>
+
+  <div id="status"></div>
+  <a class="back" href="index.html">← Volver</a>
+
+<script>
+const form = document.getElementById('note-form');
+const statusEl = document.getElementById('status');
+const submitBtn = document.getElementById('submit-btn');
+
+['owner','repo','token'].forEach(id => {
+  const saved = sessionStorage.getItem('umbral_' + id);
+  if (saved) document.getElementById(id).value = saved;
+});
+document.getElementById('date').value = new Date().toISOString().slice(0,10);
+
+function setStatus(msg, cls){
+  statusEl.textContent = msg;
+  statusEl.className = cls || '';
+}
+
+function b64FromArrayBuffer(buf){
+  let binary = '';
+  const bytes = new Uint8Array(buf);
+  const chunk = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunk){
+    binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+  }
+  return btoa(binary);
+}
+
+async function gh(owner, repo, token, path, options = {}){
+  return fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+    ...options,
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Accept': 'application/vnd.github+json',
+      ...(options.headers || {}),
+    },
+  });
+}
+
+async function getFile(owner, repo, token, path){
+  const res = await gh(owner, repo, token, path);
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`GET ${path} → ${res.status}`);
+  const json = await res.json();
+  const bin = atob(json.content.replace(/\n/g, ''));
+  const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+  return { sha: json.sha, content: new TextDecoder('utf-8').decode(bytes) };
+}
+
+async function putJson(owner, repo, token, path, obj, sha, message){
+  const bytes = new TextEncoder().encode(JSON.stringify(obj, null, 2));
+  const content = b64FromArrayBuffer(bytes.buffer);
+  const res = await gh(owner, repo, token, path, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, content, sha: sha || undefined }),
+  });
+  if (!res.ok) throw new Error(`PUT ${path} → ${res.status}: ${await res.text()}`);
+}
+
+async function putBinary(owner, repo, token, path, base64, message){
+  const res = await gh(owner, repo, token, path, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message, content: base64 }),
+  });
+  if (!res.ok) throw new Error(`PUT ${path} → ${res.status}: ${await res.text()}`);
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  submitBtn.disabled = true;
+  setStatus('Guardando…');
+
+  const owner = document.getElementById('owner').value.trim();
+  const repo  = document.getElementById('repo').value.trim();
+  const token = document.getElementById('token').value.trim();
+  const date  = document.getElementById('date').value;
+  const note  = document.getElementById('note').value.trim();
+  const files = document.getElementById('photos').files;
+
+  sessionStorage.setItem('umbral_owner', owner);
+  sessionStorage.setItem('umbral_repo', repo);
+  sessionStorage.setItem('umbral_token', token);
+
+  try {
+    const dayPath = `data/${date}.json`;
+    const existing = await getFile(owner, repo, token, dayPath);
+    const dayObj = existing ? JSON.parse(existing.content) : { date };
+
+    const photoPaths = dayObj.photos || [];
+    let i = 0;
+    for (const file of files){
+      i++;
+      setStatus(`Subiendo imagen ${i}/${files.length}…`);
+      const base64 = b64FromArrayBuffer(await file.arrayBuffer());
+      const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const imgPath = `images/${date}/${Date.now()}_${safe}`;
+      await putBinary(owner, repo, token, imgPath, base64, `img ${date}`);
+      photoPaths.push(imgPath);
+    }
+
+    dayObj.notes = note || dayObj.notes || '';
+    dayObj.photos = photoPaths;
+    setStatus('Guardando anotación…');
+    await putJson(owner, repo, token, dayPath, dayObj, existing?.sha, `nota ${date}`);
+
+    const mPath = 'data/manifest.json';
+    const mFile = await getFile(owner, repo, token, mPath);
+    let manifest = mFile ? JSON.parse(mFile.content) : [];
+    if (!manifest.includes(date)){
+      manifest.push(date);
+      manifest = [...new Set(manifest)].sort().reverse();
+      await putJson(owner, repo, token, mPath, manifest, mFile?.sha, `manifest ${date}`);
+    }
+
+    setStatus('Entrada guardada. Recarga el panel para verla.', 'ok');
+    document.getElementById('note').value = '';
+    document.getElementById('photos').value = '';
+  } catch (err){
+    console.error(err);
+    setStatus('Error: ' + err.message, 'err');
+  } finally {
+    submitBtn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
