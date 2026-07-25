@@ -48,6 +48,15 @@
   input[type=date]{ font-family:'IBM Plex Mono', monospace; font-size:14px; color-scheme:light; }
   textarea{ min-height:120px; resize:vertical; line-height:1.5; }
   input:focus, textarea:focus{ outline:none; border-color:var(--ink); }
+  .picker{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:22px; }
+  .opt{
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
+    letter-spacing:0.14em; text-transform:uppercase;
+    padding:8px 13px; border:1px solid var(--rule); background:transparent;
+    color:var(--ash); cursor:pointer;
+  }
+  .opt:hover{ border-color:var(--ash); color:var(--ink); }
+  .opt[aria-pressed="true"]{ background:var(--ink); border-color:var(--ink); color:var(--paper); }
   input[type=file]{
     font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ash);
     margin-bottom:22px; width:100%;
@@ -115,8 +124,14 @@
       <legend>Sesión</legend>
       <label for="date">Fecha</label>
       <input type="date" id="date" required>
+      <label for="tipo">Tipo de sesión</label>
+      <div class="picker" id="pick-tipo"></div>
+
+      <label>Elementos y estaciones</label>
+      <div class="picker" id="pick-tags"></div>
+
       <label for="note">Anotación</label>
-      <textarea id="note" placeholder="Sensaciones, técnica, qué ajustar mañana..."></textarea>
+      <textarea id="note" placeholder="Qué hiciste exactamente: series, cargas, ritmos, sensaciones..."></textarea>
       <label for="photos">Imágenes</label>
       <input type="file" id="photos" accept="image/*" multiple>
     </fieldset>
@@ -125,12 +140,43 @@
   </form>
 
   <div id="status"></div>
-  <a class="back" href="index.html">← Volver</a>
+  <a class="back" href="index.html">← Volver al registro</a>
 
 <script>
 const form = document.getElementById('note-form');
 const statusEl = document.getElementById('status');
 const submitBtn = document.getElementById('submit-btn');
+
+const TIPOS = ['Fuerza','Carrera Z2','Carrera Z3/Z4','Estaciones','Interferencia',
+  'Híbrido','Movilidad','Descanso'];
+const TAGS = ['Sled Push','Sled Pull','SkiErg','Remo','Burpees','Farmers Carry',
+  'Sandbag Lunges','Wall Balls','Carrera','Core','Tren inferior','Tren superior'];
+
+let tipoSel = null;
+const tagsSel = new Set();
+
+function buildPickers(){
+  const pt = document.getElementById('pick-tipo');
+  pt.innerHTML = TIPOS.map(t =>
+    `<button type="button" class="opt" data-tipo="${t}" aria-pressed="false">${t}</button>`).join('');
+  const pg = document.getElementById('pick-tags');
+  pg.innerHTML = TAGS.map(t =>
+    `<button type="button" class="opt" data-tag="${t}" aria-pressed="false">${t}</button>`).join('');
+
+  pt.addEventListener('click', e => {
+    const b = e.target.closest('.opt'); if (!b) return;
+    tipoSel = tipoSel === b.dataset.tipo ? null : b.dataset.tipo;
+    pt.querySelectorAll('.opt').forEach(x =>
+      x.setAttribute('aria-pressed', String(x.dataset.tipo === tipoSel)));
+  });
+  pg.addEventListener('click', e => {
+    const b = e.target.closest('.opt'); if (!b) return;
+    const t = b.dataset.tag;
+    tagsSel.has(t) ? tagsSel.delete(t) : tagsSel.add(t);
+    b.setAttribute('aria-pressed', String(tagsSel.has(t)));
+  });
+}
+buildPickers();
 
 ['owner','repo','token'].forEach(id => {
   const saved = sessionStorage.getItem('umbral_' + id);
@@ -229,21 +275,25 @@ form.addEventListener('submit', async (e) => {
 
     dayObj.notes = note || dayObj.notes || '';
     dayObj.photos = photoPaths;
+    if (tipoSel) dayObj.tipo = tipoSel;
+    if (tagsSel.size) dayObj.etiquetas = [...new Set([...(dayObj.etiquetas || []), ...tagsSel])];
     setStatus('Guardando anotación…');
     await putJson(owner, repo, token, dayPath, dayObj, existing?.sha, `nota ${date}`);
 
-    const mPath = 'data/manifest.json';
-    const mFile = await getFile(owner, repo, token, mPath);
-    let manifest = mFile ? JSON.parse(mFile.content) : [];
-    if (!manifest.includes(date)){
-      manifest.push(date);
-      manifest = [...new Set(manifest)].sort().reverse();
-      await putJson(owner, repo, token, mPath, manifest, mFile?.sha, `manifest ${date}`);
-    }
+    setStatus('Actualizando índice…');
+    const iPath = 'data/index.json';
+    const iFile = await getFile(owner, repo, token, iPath);
+    let index = iFile ? JSON.parse(iFile.content) : [];
+    index = index.filter(d => d.date !== date);
+    index.push(dayObj);
+    index.sort((a, b) => b.date.localeCompare(a.date));
+    await putJson(owner, repo, token, iPath, index, iFile?.sha, `índice ${date}`);
 
     setStatus('Entrada guardada. Recarga el panel para verla.', 'ok');
     document.getElementById('note').value = '';
     document.getElementById('photos').value = '';
+    tipoSel = null; tagsSel.clear();
+    document.querySelectorAll('.opt').forEach(x => x.setAttribute('aria-pressed', 'false'));
   } catch (err){
     console.error(err);
     setStatus('Error: ' + err.message, 'err');

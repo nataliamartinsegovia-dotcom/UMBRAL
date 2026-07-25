@@ -9,265 +9,187 @@
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:  #FBFAF7;
-    --ink:    #1A1916;
-    --ash:    #8E8B82;
-    --pale:   #CFCCC4;
-    --rule:   #E5E2DA;
-
-    --edge: 88px;
-    --measure: 1280px;
+    --paper:#FBFAF7; --ink:#1A1916; --ash:#8E8B82;
+    --pale:#CFCCC4; --rule:#E5E2DA; --ghost:#EFEDE7;
+    --edge:88px; --measure:1280px;
   }
-
   *{ box-sizing:border-box; margin:0; padding:0; }
-
   html{ background:var(--paper); }
-
   body{
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Jost', sans-serif;
-    font-weight:400;
+    background:var(--paper); color:var(--ink);
+    font-family:'Jost', sans-serif; font-weight:400;
     -webkit-font-smoothing:antialiased;
-    max-width:var(--measure);
-    margin:0 auto;
+    max-width:var(--measure); margin:0 auto;
     padding:56px var(--edge) 160px;
   }
-
   .cap{
-    font-family:'IBM Plex Mono', monospace;
-    font-weight:300;
-    font-size:10px;
-    letter-spacing:0.24em;
-    text-transform:uppercase;
-    color:var(--ash);
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
+    letter-spacing:0.24em; text-transform:uppercase; color:var(--ash);
   }
 
-  /* ---------- masthead ---------- */
+  /* masthead */
   .masthead{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-end;
-    gap:40px;
-    padding-bottom:28px;
-    border-bottom:1px solid var(--ink);
+    display:flex; justify-content:space-between; align-items:flex-end; gap:40px;
+    padding-bottom:28px; border-bottom:1px solid var(--ink);
   }
   .wordmark{
-    font-family:'Jost', sans-serif;
-    font-weight:200;
-    font-size:clamp(48px, 7vw, 92px);
-    line-height:0.9;
-    letter-spacing:0.16em;
-    text-transform:uppercase;
-    color:var(--ink);
+    font-weight:200; font-size:clamp(48px,7vw,92px); line-height:0.9;
+    letter-spacing:0.16em; text-transform:uppercase;
   }
-  .masthead .ident{
-    text-align:right;
-    line-height:2.1;
-    white-space:nowrap;
-  }
+  .masthead .ident{ text-align:right; line-height:2.1; white-space:nowrap; }
   .masthead .ident b{ color:var(--ink); font-weight:400; }
 
-  /* ---------- signature: threshold band ---------- */
-  .band{
-    padding:44px 0 0;
-    border-bottom:1px solid var(--rule);
-    margin-bottom:64px;
-  }
-  .band-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-    margin-bottom:26px;
-  }
-  .chart{
-    position:relative;
-    height:148px;
-    display:flex;
-    align-items:flex-end;
-    gap:2px;
-    padding-bottom:28px;
-  }
+  /* threshold band */
+  .band{ padding:44px 0 0; border-bottom:1px solid var(--rule); margin-bottom:56px; }
+  .band-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:26px; }
+  .chart{ position:relative; height:148px; display:flex; align-items:flex-end; gap:2px; padding-bottom:28px; }
   .threshold-line{
-    position:absolute;
-    left:0; right:0;
-    bottom:calc(28px + (120px * 0.67));
-    border-top:1px solid var(--ink);
-    pointer-events:none;
+    position:absolute; left:0; right:0; bottom:calc(28px + (120px * 0.67));
+    border-top:1px solid var(--ink); pointer-events:none;
   }
   .threshold-line span{
-    position:absolute;
-    right:0;
-    top:-19px;
-    font-family:'IBM Plex Mono', monospace;
-    font-weight:300;
-    font-size:9px;
-    letter-spacing:0.2em;
-    text-transform:uppercase;
-    color:var(--ink);
-    background:var(--paper);
-    padding-left:10px;
+    position:absolute; right:0; top:-19px;
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:9px;
+    letter-spacing:0.2em; text-transform:uppercase; color:var(--ink);
+    background:var(--paper); padding-left:10px;
   }
-  .tick{
-    flex:1;
-    min-width:2px;
-    background:var(--pale);
-    position:relative;
-  }
+  .tick{ flex:1; min-width:2px; background:var(--pale); cursor:pointer; }
   .tick.over{ background:var(--ink); }
+  .tick.dim{ background:var(--ghost); }
+  .tick:hover{ opacity:0.65; }
   .chart-axis{
-    position:absolute;
-    left:0; right:0; bottom:0;
-    display:flex;
-    justify-content:space-between;
-    font-family:'IBM Plex Mono', monospace;
-    font-weight:300;
-    font-size:9px;
-    letter-spacing:0.16em;
-    color:var(--ash);
-    padding-top:10px;
-    border-top:1px solid var(--rule);
+    position:absolute; left:0; right:0; bottom:0; display:flex; justify-content:space-between;
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:9px;
+    letter-spacing:0.16em; color:var(--ash); padding-top:10px; border-top:1px solid var(--rule);
   }
 
-  /* ---------- readings ---------- */
+  /* readings */
   .readings{
-    display:grid;
-    grid-template-columns:repeat(4, 1fr);
-    gap:1px;
-    background:var(--rule);
-    border-top:1px solid var(--rule);
-    border-bottom:1px solid var(--rule);
-    margin-bottom:96px;
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--rule);
+    border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); margin-bottom:72px;
   }
-  .reading{
-    background:var(--paper);
-    padding:30px 28px 34px 0;
-  }
+  .reading{ background:var(--paper); padding:30px 28px 34px 0; }
   .reading .k{ display:block; margin-bottom:22px; }
-  .reading .v{
-    font-family:'Jost', sans-serif;
-    font-weight:200;
-    font-size:60px;
-    line-height:0.86;
-    letter-spacing:-0.01em;
-    color:var(--ink);
-  }
+  .reading .v{ font-weight:200; font-size:60px; line-height:0.86; letter-spacing:-0.01em; }
   .reading .v u{
-    text-decoration:none;
-    font-family:'IBM Plex Mono', monospace;
-    font-weight:300;
-    font-size:11px;
-    letter-spacing:0.12em;
-    color:var(--ash);
-    margin-left:6px;
-    vertical-align:super;
+    text-decoration:none; font-family:'IBM Plex Mono', monospace; font-weight:300;
+    font-size:11px; letter-spacing:0.12em; color:var(--ash); margin-left:6px; vertical-align:super;
   }
   .reading.under .v{ color:var(--pale); }
 
-  /* ---------- log ---------- */
-  .log-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-    padding-bottom:18px;
-    border-bottom:1px solid var(--ink);
-    margin-bottom:0;
+  /* ---- filters ---- */
+  .filters{ margin-bottom:8px; }
+  .search-row{
+    display:flex; align-items:baseline; gap:20px;
+    border-bottom:1px solid var(--ink); padding-bottom:14px; margin-bottom:22px;
   }
+  .search-row input{
+    flex:1; border:none; background:transparent; color:var(--ink);
+    font-family:'Jost', sans-serif; font-weight:300; font-size:24px; letter-spacing:0.01em;
+    padding:0;
+  }
+  .search-row input::placeholder{ color:var(--pale); }
+  .search-row input:focus{ outline:none; }
+  .search-hint{ font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:9px;
+    letter-spacing:0.2em; text-transform:uppercase; color:var(--pale); white-space:nowrap; }
 
+  .chipset{ margin-bottom:14px; }
+  .chipset-label{
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:9px;
+    letter-spacing:0.24em; text-transform:uppercase; color:var(--ash);
+    display:block; margin-bottom:10px;
+  }
+  .chips{ display:flex; flex-wrap:wrap; gap:6px; }
+  .chip{
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
+    letter-spacing:0.14em; text-transform:uppercase;
+    padding:7px 13px; border:1px solid var(--rule); background:transparent;
+    color:var(--ash); cursor:pointer; white-space:nowrap;
+  }
+  .chip:hover{ border-color:var(--ash); color:var(--ink); }
+  .chip[aria-pressed="true"]{ background:var(--ink); border-color:var(--ink); color:var(--paper); }
+  .chip .n{ opacity:0.55; margin-left:6px; }
+
+  .more-toggle{
+    background:none; border:none; padding:0; cursor:pointer;
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:9px;
+    letter-spacing:0.2em; text-transform:uppercase; color:var(--ash);
+    border-bottom:1px solid var(--rule); margin-top:6px;
+  }
+  .more-toggle:hover{ color:var(--ink); border-color:var(--ink); }
+  .extra-filters[hidden]{ display:none; }
+
+  .result-row{
+    display:flex; justify-content:space-between; align-items:baseline; gap:20px;
+    padding:16px 0 14px; border-bottom:1px solid var(--ink); margin-top:20px;
+  }
+  .clear-btn{
+    background:none; border:none; padding:0; cursor:pointer;
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
+    letter-spacing:0.2em; text-transform:uppercase; color:var(--ink);
+    border-bottom:1px solid var(--ink);
+  }
+  .clear-btn[hidden]{ display:none; }
+
+  /* ---- log ---- */
   .entry{
-    display:grid;
-    grid-template-columns:132px 1fr 200px;
-    gap:36px;
-    padding:38px 0;
-    border-bottom:1px solid var(--rule);
-    align-items:start;
+    display:grid; grid-template-columns:132px 1fr 200px; gap:36px;
+    padding:38px 0; border-bottom:1px solid var(--rule); align-items:start;
   }
   .entry .stamp{
-    font-family:'IBM Plex Mono', monospace;
-    font-weight:300;
-    font-size:10px;
-    letter-spacing:0.16em;
-    text-transform:uppercase;
-    color:var(--ink);
-    line-height:2;
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
+    letter-spacing:0.16em; text-transform:uppercase; color:var(--ink); line-height:2;
   }
-  .entry .stamp em{
-    display:block;
-    font-style:normal;
-    color:var(--ash);
-  }
+  .entry .stamp em{ display:block; font-style:normal; color:var(--ash); }
+  .entry .stamp .blk{ display:block; color:var(--pale); margin-top:8px; }
   .entry .col-main{ min-width:0; }
   .entry .vitals{
-    font-family:'IBM Plex Mono', monospace;
-    font-weight:300;
-    font-size:10px;
-    letter-spacing:0.14em;
-    text-transform:uppercase;
-    color:var(--ash);
-    padding-bottom:16px;
-    border-bottom:1px solid var(--rule);
-    margin-bottom:18px;
-    display:flex;
-    gap:26px;
-    flex-wrap:wrap;
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
+    letter-spacing:0.14em; text-transform:uppercase; color:var(--ash);
+    padding-bottom:16px; border-bottom:1px solid var(--rule); margin-bottom:18px;
+    display:flex; gap:26px; flex-wrap:wrap;
   }
   .entry .vitals i{ font-style:normal; color:var(--ink); }
-  .entry .vitals i.over{ font-weight:400; }
-
   .entry .session{
-    font-family:'IBM Plex Mono', monospace;
-    font-weight:300;
-    font-size:10px;
-    letter-spacing:0.18em;
-    text-transform:uppercase;
-    color:var(--ink);
-    margin-bottom:14px;
-    line-height:2;
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
+    letter-spacing:0.18em; text-transform:uppercase; color:var(--ink);
+    margin-bottom:14px; line-height:2;
   }
-  .entry .note{
-    font-family:'Jost', sans-serif;
-    font-weight:300;
-    font-size:17px;
-    line-height:1.6;
-    color:var(--ink);
-    max-width:54ch;
+  .entry .tags{ display:flex; flex-wrap:wrap; gap:5px; margin-bottom:14px; }
+  .entry .tag{
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:9px;
+    letter-spacing:0.16em; text-transform:uppercase; color:var(--ash);
+    border:1px solid var(--rule); padding:4px 9px; cursor:pointer; background:none;
   }
+  .entry .tag:hover{ color:var(--ink); border-color:var(--ink); }
+  .entry .tag.tipo{ color:var(--ink); border-color:var(--ink); }
+  .entry .note{ font-weight:300; font-size:17px; line-height:1.6; max-width:54ch; }
   .entry .note.void{ color:var(--pale); font-weight:200; }
-
-  /* photography is the only colour in the interface */
+  mark{ background:var(--ghost); color:var(--ink); }
   .entry .plates{ display:grid; grid-template-columns:1fr 1fr; gap:4px; }
-  .entry .plates img{
-    width:100%;
-    aspect-ratio:3/4;
-    object-fit:cover;
-    display:block;
-  }
+  .entry .plates img{ width:100%; aspect-ratio:3/4; object-fit:cover; display:block; }
   .entry .plates:empty{ display:none; }
 
   .void-state{
-    padding:120px 0;
-    text-align:center;
-    font-family:'IBM Plex Mono', monospace;
-    font-weight:300;
-    font-size:10px;
-    letter-spacing:0.24em;
-    text-transform:uppercase;
-    color:var(--pale);
-    line-height:2.6;
+    padding:110px 0; text-align:center;
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
+    letter-spacing:0.24em; text-transform:uppercase; color:var(--pale); line-height:2.6;
   }
+  .load-more{
+    display:block; width:100%; margin-top:32px; padding:18px;
+    background:none; border:1px solid var(--rule); cursor:pointer;
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
+    letter-spacing:0.24em; text-transform:uppercase; color:var(--ink);
+  }
+  .load-more:hover{ border-color:var(--ink); }
+  .load-more[hidden]{ display:none; }
 
   footer{
-    margin-top:88px;
-    padding-top:24px;
-    border-top:1px solid var(--ink);
-    display:flex;
-    justify-content:space-between;
-    gap:20px;
-    flex-wrap:wrap;
+    margin-top:88px; padding-top:24px; border-top:1px solid var(--ink);
+    display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap;
   }
   footer a{ color:var(--ink); text-decoration:none; border-bottom:1px solid var(--ink); padding-bottom:2px; }
   footer a:hover{ color:var(--ash); border-color:var(--ash); }
-
   :focus-visible{ outline:1px solid var(--ink); outline-offset:4px; }
 
   @media (max-width:1100px){
@@ -283,6 +205,8 @@
     .readings{ grid-template-columns:1fr 1fr; }
     .reading{ padding-right:16px; }
     .reading .v{ font-size:44px; }
+    .search-row input{ font-size:19px; }
+    .search-hint{ display:none; }
     .entry{ grid-template-columns:1fr; gap:16px; }
     .entry .plates{ grid-column:1; grid-template-columns:repeat(3,1fr); }
   }
@@ -312,23 +236,66 @@
 
   <section class="readings" id="readings"></section>
 
-  <div class="log-head">
-    <span class="cap">Registro</span>
-    <span class="cap" id="entry-count">—</span>
-  </div>
+  <section class="filters">
+    <div class="search-row">
+      <input type="search" id="q" placeholder="Buscar en el registro" aria-label="Buscar sesiones">
+      <span class="search-hint" id="hint">Pulsa / para buscar</span>
+    </div>
+
+    <div class="chipset">
+      <span class="chipset-label">Tipo de sesión</span>
+      <div class="chips" id="chips-tipo"></div>
+    </div>
+
+    <button class="more-toggle" id="more-toggle" aria-expanded="false">+ Más filtros</button>
+
+    <div class="extra-filters" id="extra" hidden>
+      <div class="chipset" style="margin-top:22px;">
+        <span class="chipset-label">Elementos y estaciones</span>
+        <div class="chips" id="chips-tag"></div>
+      </div>
+      <div class="chipset">
+        <span class="chipset-label">Estado de recuperación</span>
+        <div class="chips" id="chips-umbral">
+          <button class="chip" data-umbral="over" aria-pressed="false">Sobre umbral</button>
+          <button class="chip" data-umbral="under" aria-pressed="false">Bajo umbral</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-row">
+      <span class="cap" id="result-count">—</span>
+      <button class="clear-btn" id="clear" hidden>Limpiar filtros</button>
+    </div>
+  </section>
+
   <section id="log"></section>
+  <button class="load-more" id="load-more" hidden>Mostrar más</button>
 
   <footer>
     <span class="cap">WHOOP v2 — sincroniza 08:00 UTC</span>
-    <span class="cap"><a href="admin.html">Añadir entrada</a></span>
+    <span class="cap">
+      <a href="analisis.html">Análisis</a>
+      &nbsp;&nbsp;
+      <a href="admin.html">Añadir entrada</a>
+    </span>
   </footer>
 
 <script>
 const RACE_DATE = '2026-12-12';
 const THRESHOLD = 67;
 const DASH = '\u2014';
+const PAGE = 40;
 
-const $ = (id) => document.getElementById(id);
+const $ = id => document.getElementById(id);
+
+let DAYS = [];
+let shown = PAGE;
+const state = { q: '', tipo: new Set(), tags: new Set(), umbral: null };
+
+/* ---------- utils ---------- */
+const norm = s => (s || '').toString().toLowerCase()
+  .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
 function fmtStamp(iso){
   const d = new Date(iso + 'T00:00:00');
@@ -338,6 +305,82 @@ function fmtStamp(iso){
   };
 }
 
+function esc(s){
+  return (s || '').replace(/[&<>"']/g, c =>
+    ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+function highlight(text, q){
+  const safe = esc(text);
+  if (!q) return safe;
+  const nText = norm(safe), nQ = norm(q);
+  let out = '', i = 0;
+  while (true){
+    const at = nText.indexOf(nQ, i);
+    if (at === -1){ out += safe.slice(i); break; }
+    out += safe.slice(i, at) + '<mark>' + safe.slice(at, at + q.length) + '</mark>';
+    i = at + q.length;
+  }
+  return out;
+}
+
+/* Training blocks, from the performance plan */
+function bloqueOf(dateStr){
+  const d = new Date(dateStr + 'T00:00:00');
+  if (d < new Date('2026-08-24')) return 'Bloque 1';
+  if (d < new Date('2026-09-21')) return 'Bloque 2';
+  return 'Bloque 3';
+}
+
+/* Session type inferred from WHOOP when not set by hand */
+function tipoOf(day){
+  if (day.tipo) return day.tipo;
+  const w = (day.workouts || [])[0];
+  if (!w) return null;
+  const s = norm(w.sport_name);
+  if (s.includes('running')) return 'Carrera';
+  if (s.includes('weightlifting')) return 'Fuerza';
+  if (s.includes('functional')) return 'Estaciones';
+  if (s.includes('hiit')) return 'Híbrido';
+  if (s.includes('yoga') || s.includes('pilates')) return 'Movilidad';
+  return w.sport_name || null;
+}
+
+function tagsOf(day){ return Array.isArray(day.etiquetas) ? day.etiquetas : []; }
+
+/* ---------- filtering ---------- */
+function matches(day){
+  if (state.tipo.size){
+    const t = tipoOf(day);
+    if (!t || !state.tipo.has(t)) return false;
+  }
+  if (state.tags.size){
+    const tg = tagsOf(day);
+    for (const want of state.tags) if (!tg.includes(want)) return false;
+  }
+  if (state.umbral){
+    const r = day.recovery_score;
+    if (r === null || r === undefined) return false;
+    if (state.umbral === 'over' && r < THRESHOLD) return false;
+    if (state.umbral === 'under' && r >= THRESHOLD) return false;
+  }
+  if (state.q){
+    const hay = norm([
+      day.notes,
+      (day.workouts || []).map(w => w.sport_name).join(' '),
+      tagsOf(day).join(' '),
+      tipoOf(day),
+      day.date,
+    ].join(' '));
+    if (!hay.includes(norm(state.q))) return false;
+  }
+  return true;
+}
+
+const isFiltered = () =>
+  state.q || state.tipo.size || state.tags.size || state.umbral;
+
+/* ---------- render ---------- */
 function readingCell(k, v, unit, under){
   return `<div class="reading${under ? ' under' : ''}">
     <span class="k cap">${k}</span>
@@ -348,10 +391,8 @@ function readingCell(k, v, unit, under){
 function renderReadings(day){
   if (!day){
     $('readings').innerHTML =
-      readingCell('Recuperación', null, '%', true) +
-      readingCell('VFC', null, 'ms', true) +
-      readingCell('Sueño', null, '%', true) +
-      readingCell('Carga', null, '', true);
+      readingCell('Recuperación', null, '%', true) + readingCell('VFC', null, 'ms', true) +
+      readingCell('Sueño', null, '%', true) + readingCell('Carga', null, '', true);
     return;
   }
   const under = (day.recovery_score ?? 0) < THRESHOLD;
@@ -362,28 +403,29 @@ function renderReadings(day){
     readingCell('Carga', day.day_strain, '', false);
 }
 
-function renderChart(days){
+function renderChart(matchedDates){
   const chart = $('chart');
   const line = chart.querySelector('.threshold-line');
   const axis = chart.querySelector('.chart-axis');
-  const slice = days.slice(0, 30).reverse();
+  const slice = DAYS.slice(0, 30).reverse();
+  const filtering = isFiltered();
 
-  chart.innerHTML = '';
-  chart.appendChild(line);
-  chart.appendChild(axis);
+  chart.querySelectorAll('.tick').forEach(t => t.remove());
 
   if (!slice.length){
+    const frag = document.createDocumentFragment();
     for (let i = 0; i < 30; i++){
       const t = document.createElement('div');
-      t.className = 'tick';
-      t.style.height = '2px';
-      chart.insertBefore(t, axis);
+      t.className = 'tick'; t.style.height = '2px';
+      frag.appendChild(t);
     }
+    chart.insertBefore(frag, axis);
     $('over-count').textContent = DASH;
     return;
   }
 
   let over = 0;
+  const frag = document.createDocumentFragment();
   slice.forEach(d => {
     const score = d.recovery_score;
     const t = document.createElement('div');
@@ -394,73 +436,211 @@ function renderChart(days){
       if (score >= THRESHOLD){ over++; t.classList.add('over'); }
       t.style.height = Math.max(120 * score / 100, 2) + 'px';
       t.title = `${d.date} — ${score}%`;
+      if (filtering && !matchedDates.has(d.date)){
+        t.classList.remove('over');
+        t.classList.add('dim');
+      }
+      t.addEventListener('click', () => {
+        $('q').value = d.date;
+        state.q = d.date;
+        apply();
+      });
     }
-    chart.insertBefore(t, axis);
+    frag.appendChild(t);
   });
+  chart.insertBefore(frag, axis);
 
   $('over-count').textContent = `${over} de ${slice.length} sobre umbral`;
   $('axis-from').textContent = fmtStamp(slice[0].date).day;
   $('axis-to').textContent = fmtStamp(slice[slice.length - 1].date).day;
 }
 
-function renderEntry(d){
+function entryHTML(d){
   const { day, wd } = fmtStamp(d.date);
-  const over = (d.recovery_score ?? 0) >= THRESHOLD;
+  const tipo = tipoOf(d);
+  const tags = tagsOf(d);
 
   const sessions = (d.workouts || []).map(w =>
-    `${w.sport_name || 'Sesión'} — ${w.duration_min ?? DASH} min — carga ${w.strain ?? DASH}`
+    `${esc(w.sport_name || 'Sesión')} — ${w.duration_min ?? DASH} min — carga ${w.strain ?? DASH}`
   ).join('<br>');
 
+  const chips = [
+    tipo ? `<button class="tag tipo" data-tipo="${esc(tipo)}">${esc(tipo)}</button>` : '',
+    ...tags.map(t => `<button class="tag" data-tag="${esc(t)}">${esc(t)}</button>`),
+  ].filter(Boolean).join('');
+
   const plates = (d.photos || [])
-    .map(src => `<img src="${src}" alt="Sesión del ${d.date}" loading="lazy">`).join('');
+    .map(src => `<img src="${esc(src)}" alt="Sesión del ${d.date}" loading="lazy">`).join('');
 
   const note = d.notes && d.notes.trim()
-    ? `<p class="note">${d.notes}</p>`
+    ? `<p class="note">${highlight(d.notes, state.q)}</p>`
     : `<p class="note void">Sin anotación</p>`;
 
   return `<article class="entry">
-    <div class="stamp">${day}<em>${wd}</em></div>
+    <div class="stamp">${day}<em>${wd}</em><span class="blk">${bloqueOf(d.date)}</span></div>
     <div class="col-main">
       <div class="vitals">
-        <span>Rec <i class="${over ? 'over' : ''}">${d.recovery_score ?? DASH}</i></span>
+        <span>Rec <i>${d.recovery_score ?? DASH}</i></span>
         <span>VFC <i>${d.hrv_rmssd_milli ?? DASH}</i></span>
         <span>FC <i>${d.resting_heart_rate ?? DASH}</i></span>
         <span>Carga <i>${d.day_strain ?? DASH}</i></span>
       </div>
       ${sessions ? `<div class="session">${sessions}</div>` : ''}
+      ${chips ? `<div class="tags">${chips}</div>` : ''}
       ${note}
     </div>
     <div class="plates">${plates}</div>
   </article>`;
 }
 
+function buildChips(){
+  const tipoCounts = new Map(), tagCounts = new Map();
+  for (const d of DAYS){
+    const t = tipoOf(d);
+    if (t) tipoCounts.set(t, (tipoCounts.get(t) || 0) + 1);
+    for (const tag of tagsOf(d)) tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
+  }
+  const render = (el, counts, attr) => {
+    const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    el.innerHTML = sorted.map(([name, n]) =>
+      `<button class="chip" data-${attr}="${esc(name)}" aria-pressed="false">${esc(name)}<span class="n">${n}</span></button>`
+    ).join('') || `<span class="cap" style="color:var(--pale)">Sin datos todavía</span>`;
+  };
+  render($('chips-tipo'), tipoCounts, 'tipo');
+  render($('chips-tag'), tagCounts, 'tag');
+}
+
+function syncChipStates(){
+  document.querySelectorAll('[data-tipo]').forEach(b => {
+    if (b.classList.contains('chip'))
+      b.setAttribute('aria-pressed', state.tipo.has(b.dataset.tipo));
+  });
+  document.querySelectorAll('.chip[data-tag]').forEach(b =>
+    b.setAttribute('aria-pressed', state.tags.has(b.dataset.tag)));
+  document.querySelectorAll('.chip[data-umbral]').forEach(b =>
+    b.setAttribute('aria-pressed', state.umbral === b.dataset.umbral));
+}
+
+function apply(){
+  const matched = DAYS.filter(matches);
+  const matchedDates = new Set(matched.map(d => d.date));
+
+  renderChart(matchedDates);
+  syncChipStates();
+
+  const total = DAYS.length;
+  $('result-count').textContent = isFiltered()
+    ? `${matched.length} de ${total} entradas`
+    : `${total} entradas`;
+  $('clear').hidden = !isFiltered();
+
+  const page = matched.slice(0, shown);
+  $('log').innerHTML = page.length
+    ? page.map(entryHTML).join('')
+    : `<div class="void-state">Ninguna sesión coincide<br>Prueba a quitar algún filtro</div>`;
+
+  $('load-more').hidden = matched.length <= shown;
+  $('load-more').textContent = `Mostrar más (${matched.length - shown} restantes)`;
+}
+
+/* ---------- events ---------- */
+let qTimer;
+$('q').addEventListener('input', e => {
+  clearTimeout(qTimer);
+  qTimer = setTimeout(() => { state.q = e.target.value.trim(); shown = PAGE; apply(); }, 140);
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === '/' && document.activeElement !== $('q')){
+    e.preventDefault(); $('q').focus();
+  }
+  if (e.key === 'Escape' && document.activeElement === $('q')){
+    $('q').value = ''; state.q = ''; shown = PAGE; apply(); $('q').blur();
+  }
+});
+
+function toggleSet(set, value){
+  set.has(value) ? set.delete(value) : set.add(value);
+}
+
+document.addEventListener('click', e => {
+  const chip = e.target.closest('.chip');
+  if (chip){
+    if (chip.dataset.tipo !== undefined) toggleSet(state.tipo, chip.dataset.tipo);
+    else if (chip.dataset.tag !== undefined) toggleSet(state.tags, chip.dataset.tag);
+    else if (chip.dataset.umbral !== undefined)
+      state.umbral = state.umbral === chip.dataset.umbral ? null : chip.dataset.umbral;
+    shown = PAGE; apply();
+    return;
+  }
+  const tag = e.target.closest('.entry .tag');
+  if (tag){
+    if (tag.dataset.tipo !== undefined) toggleSet(state.tipo, tag.dataset.tipo);
+    else if (tag.dataset.tag !== undefined) toggleSet(state.tags, tag.dataset.tag);
+    if ($('extra').hidden){
+      $('extra').hidden = false;
+      $('more-toggle').setAttribute('aria-expanded', 'true');
+      $('more-toggle').textContent = '– Menos filtros';
+    }
+    shown = PAGE; apply();
+    window.scrollTo({ top: document.querySelector('.filters').offsetTop - 20, behavior: 'smooth' });
+  }
+});
+
+$('more-toggle').addEventListener('click', () => {
+  const ex = $('extra');
+  ex.hidden = !ex.hidden;
+  $('more-toggle').setAttribute('aria-expanded', String(!ex.hidden));
+  $('more-toggle').textContent = ex.hidden ? '+ Más filtros' : '– Menos filtros';
+});
+
+$('clear').addEventListener('click', () => {
+  state.q = ''; state.tipo.clear(); state.tags.clear(); state.umbral = null;
+  $('q').value = ''; shown = PAGE; apply();
+});
+
+$('load-more').addEventListener('click', () => { shown += PAGE; apply(); });
+
+/* ---------- boot ---------- */
 async function boot(){
   const now = new Date();
   $('today').textContent = now.toLocaleDateString('es-ES', { day:'2-digit', month:'short' }).replace('.', '');
   const diff = Math.ceil((new Date(RACE_DATE) - now) / 86400000);
   $('countdown').textContent = diff > 0 ? String(diff).padStart(3, '0') : '000';
 
-  let manifest = [];
+  // Single request: the workflow keeps data/index.json consolidated.
   try {
-    const r = await fetch('data/manifest.json', { cache:'no-store' });
-    if (r.ok) manifest = await r.json();
+    const r = await fetch('data/index.json', { cache:'no-store' });
+    if (r.ok) DAYS = await r.json();
   } catch (e) {}
 
-  const days = [];
-  for (const date of manifest){
+  // Fallback for repos still on the old per-day layout.
+  if (!DAYS.length){
     try {
-      const r = await fetch(`data/${date}.json`, { cache:'no-store' });
-      if (r.ok) days.push(await r.json());
+      const r = await fetch('data/manifest.json', { cache:'no-store' });
+      if (r.ok){
+        const manifest = await r.json();
+        const results = await Promise.all(manifest.map(date =>
+          fetch(`data/${date}.json`, { cache:'no-store' })
+            .then(res => res.ok ? res.json() : null).catch(() => null)));
+        DAYS = results.filter(Boolean);
+      }
     } catch (e) {}
   }
 
-  renderChart(days);
-  renderReadings(days[0]);
-  $('entry-count').textContent = days.length ? `${days.length} entradas` : DASH;
+  DAYS.sort((a, b) => b.date.localeCompare(a.date));
 
-  $('log').innerHTML = days.length
-    ? days.map(renderEntry).join('')
-    : `<div class="void-state">Sin datos<br>El primer sync llenará esto</div>`;
+  if (!DAYS.length){
+    renderChart(new Set());
+    renderReadings(null);
+    $('result-count').textContent = DASH;
+    $('log').innerHTML = `<div class="void-state">Sin datos<br>El primer sync llenará esto</div>`;
+    return;
+  }
+
+  buildChips();
+  renderReadings(DAYS[0]);
+  apply();
 }
 
 boot();

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UMBRAL — Análisis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBFAF7; --ink:#1A1916; --ash:#8E8B82;
+    --pale:#CFCCC4; --rule:#E5E2DA; --ghost:#EFEDE7;
+    --edge:88px; --measure:1280px;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ background:var(--paper); }
+  body{
+    background:var(--paper); color:var(--ink);
+    font-family:'Jost', sans-serif; font-weight:400;
+    -webkit-font-smoothing:antialiased;
+    max-width:var(--measure); margin:0 auto;
+    padding:56px var(--edge) 160px;
+  }
+  .cap{
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
+    letter-spacing:0.24em; text-transform:uppercase; color:var(--ash);
+  }
+
+  .masthead{
+    display:flex; justify-content:space-between; align-items:flex-end; gap:40px;
+    padding-bottom:28px; border-bottom:1px solid var(--ink);
+  }
+  .wordmark{
+    font-weight:200; font-size:clamp(40px,6vw,74px); line-height:0.9;
+    letter-spacing:0.16em; text-transform:uppercase;
+  }
+  .masthead .ident{ text-align:right; line-height:2.1; }
+  .masthead .ident a{ color:var(--ink); text-decoration:none; border-bottom:1px solid var(--ink); }
+  .masthead .ident a:hover{ color:var(--ash); border-color:var(--ash); }
+
+  .scope{
+    display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;
+    padding:22px 0 18px; border-bottom:1px solid var(--rule); margin-bottom:12px;
+  }
+  .scope .chip{
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
+    letter-spacing:0.14em; text-transform:uppercase;
+    padding:7px 13px; border:1px solid var(--rule); background:none;
+    color:var(--ash); cursor:pointer;
+  }
+  .scope .chip:hover{ border-color:var(--ash); color:var(--ink); }
+  .scope .chip[aria-pressed="true"]{ background:var(--ink); border-color:var(--ink); color:var(--paper); }
+
+  section.panel{ padding:56px 0 0; border-bottom:1px solid var(--rule); }
+  .panel-head{ margin-bottom:8px; }
+  .panel-head h2{
+    font-weight:300; font-size:26px; letter-spacing:0.01em; margin-bottom:8px;
+  }
+  .panel-head .q{
+    font-weight:300; font-size:15px; line-height:1.6; color:var(--ash);
+    max-width:60ch; margin-bottom:26px;
+  }
+  .readout{
+    display:flex; gap:44px; flex-wrap:wrap; margin-bottom:26px;
+    padding-bottom:22px; border-bottom:1px solid var(--rule);
+  }
+  .readout .item .k{ display:block; margin-bottom:10px; }
+  .readout .item .v{ font-weight:200; font-size:38px; line-height:1; }
+  .readout .item .v u{
+    text-decoration:none; font-family:'IBM Plex Mono', monospace; font-weight:300;
+    font-size:10px; letter-spacing:0.12em; color:var(--ash); margin-left:5px; vertical-align:super;
+  }
+  .readout .item .v.up::after{ content:' ↑'; font-size:20px; color:var(--ink); }
+  .readout .item .v.down::after{ content:' ↓'; font-size:20px; color:var(--pale); }
+
+  .chart-wrap{ width:100%; margin-bottom:14px; }
+  svg{ display:block; width:100%; height:auto; overflow:visible; }
+  .grid-line{ stroke:var(--rule); stroke-width:1; }
+  .axis-line{ stroke:var(--ink); stroke-width:1; }
+  .thr-line{ stroke:var(--ink); stroke-width:1; stroke-dasharray:3 3; }
+  .lbl{
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:9px;
+    letter-spacing:0.14em; fill:var(--ash); text-transform:uppercase;
+  }
+  .lbl.ink{ fill:var(--ink); }
+  .raw-dot{ fill:var(--pale); }
+  .mean-line{ fill:none; stroke:var(--ink); stroke-width:1.5; stroke-linejoin:round; }
+  .bar{ fill:var(--ink); }
+  .bar.soft{ fill:var(--pale); }
+  .caption{
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:9px;
+    letter-spacing:0.16em; text-transform:uppercase; color:var(--pale);
+    padding-bottom:36px;
+  }
+
+  .table{ width:100%; border-collapse:collapse; margin-bottom:36px; }
+  .table th, .table td{
+    text-align:left; padding:14px 12px 14px 0; border-bottom:1px solid var(--rule);
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:11px;
+    letter-spacing:0.08em;
+  }
+  .table th{ color:var(--ash); font-size:9px; letter-spacing:0.2em; text-transform:uppercase; }
+  .table td{ color:var(--ink); }
+  .table td.dim{ color:var(--pale); }
+
+  .thin{ padding:64px 0; text-align:center; }
+  .thin p{
+    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
+    letter-spacing:0.2em; text-transform:uppercase; color:var(--pale); line-height:2.4;
+  }
+
+  footer{
+    margin-top:72px; padding-top:24px; border-top:1px solid var(--ink);
+    display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap;
+  }
+  footer a{ color:var(--ink); text-decoration:none; border-bottom:1px solid var(--ink); padding-bottom:2px; }
+  :focus-visible{ outline:1px solid var(--ink); outline-offset:4px; }
+
+  @media (max-width:1100px){ :root{ --edge:48px; } }
+  @media (max-width:720px){
+    :root{ --edge:22px; }
+    body{ padding-top:36px; }
+    .masthead{ flex-direction:column; align-items:flex-start; gap:18px; }
+    .masthead .ident{ text-align:left; }
+    .readout{ gap:28px; }
+    .readout .item .v{ font-size:30px; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="masthead">
+    <h1 class="wordmark">Análisis</h1>
+    <div class="ident cap">
+      <div><a href="index.html">← Registro</a></div>
+      <div id="span">—</div>
+    </div>
+  </header>
+
+  <div class="scope" id="scope">
+    <span class="cap" style="margin-right:12px;">Periodo</span>
+  </div>
+
+  <main id="main"></main>
+
+  <footer>
+    <span class="cap">Los datos vienen de WHOOP. La interpretación clínica no.</span>
+    <span class="cap"><a href="index.html">Volver al registro</a></span>
+  </footer>
+
+<script>
+const THRESHOLD = 67;
+const DASH = '\u2014';
+const $ = id => document.getElementById(id);
+
+let ALL = [];
+let scope = 'todo';
+
+/* ---------- data helpers ---------- */
+function bloqueOf(d){
+  const t = new Date(d + 'T00:00:00');
+  if (t < new Date('2026-08-24')) return 'Bloque 1';
+  if (t < new Date('2026-09-21')) return 'Bloque 2';
+  return 'Bloque 3';
+}
+
+function tipoOf(day){
+  if (day.tipo) return day.tipo;
+  const w = (day.workouts || [])[0];
+  if (!w) return null;
+  const s = (w.sport_name || '').toLowerCase();
+  if (s.includes('running')) return 'Carrera';
+  if (s.includes('weightlifting')) return 'Fuerza';
+  if (s.includes('functional')) return 'Estaciones';
+  if (s.includes('hiit')) return 'Híbrido';
+  if (s.includes('yoga') || s.includes('pilates')) return 'Movilidad';
+  return w.sport_name || null;
+}
+
+function inScope(d){
+  if (scope === 'todo') return true;
+  if (scope.startsWith('Bloque')) return bloqueOf(d.date) === scope;
+  const days = parseInt(scope, 10);
+  const cut = new Date(); cut.setDate(cut.getDate() - days);
+  return new Date(d.date + 'T00:00:00') >= cut;
+}
+
+const num = v => (v === null || v === undefined || Number.isNaN(v)) ? null : Number(v);
+const mean = a => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
+const round = (v, n = 1) => v === null ? null : Math.round(v * 10 ** n) / 10 ** n;
+
+function fmtDay(iso){
+  return new Date(iso + 'T00:00:00')
+    .toLocaleDateString('es-ES', { day:'2-digit', month:'short' }).replace('.', '').toUpperCase();
+}
+
+/* rolling mean over the previous `w` entries (chronological order) */
+function rolling(series, w){
+  return series.map((_, i) => {
+    const win = series.slice(Math.max(0, i - w + 1), i + 1).filter(v => v !== null);
+    return win.length >= Math.min(3, w) ? mean(win) : null;
+  });
+}
+
+/* ---------- svg helpers ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+function el(name, attrs = {}, text){
+  const n = document.createElementNS(NS, name);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+  if (text !== undefined) n.textContent = text;
+  return n;
+}
+function svgRoot(w, h){
+  const s = el('svg', { viewBox: `0 0 ${w} ${h}`, preserveAspectRatio: 'none', role: 'img' });
+  s.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+  return s;
+}
+
+/* ---------- panels ---------- */
+function panel(title, question, bodyNodes, caption){
+  const sec = el('section');
+  sec.setAttribute('class', 'panel');
+  const head = document.createElement('div');
+  head.className = 'panel-head';
+  head.innerHTML = `<h2>${title}</h2><p class="q">${question}</p>`;
+  sec.appendChild(head);
+  bodyNodes.filter(Boolean).forEach(n => sec.appendChild(n));
+  if (caption){
+    const c = document.createElement('div');
+    c.className = 'caption';
+    c.textContent = caption;
+    sec.appendChild(c);
+  }
+  return sec;
+}
+
+function readout(items){
+  const d = document.createElement('div');
+  d.className = 'readout';
+  d.innerHTML = items.map(i => `
+    <div class="item">
+      <span class="k cap">${i.k}</span>
+      <span class="v${i.trend || ''}">${i.v ?? DASH}${i.u ? `<u>${i.u}</u>` : ''}</span>
+    </div>`).join('');
+  return d;
+}
+
+function thin(msg){
+  const d = document.createElement('div');
+  d.className = 'thin';
+  d.innerHTML = `<p>${msg}</p>`;
+  return d;
+}
+
+function wrap(svg){
+  const d = document.createElement('div');
+  d.className = 'chart-wrap';
+  d.appendChild(svg);
+  return d;
+}
+
+/* ---------- 1 · HRV trend ---------- */
+function panelHRV(days){
+  const chrono = [...days].reverse();
+  const vals = chrono.map(d => num(d.hrv_rmssd_milli));
+  const present = vals.filter(v => v !== null);
+  if (present.length < 5)
+    return panel('Variabilidad cardíaca', 'La VFC es la señal más directa de si tu sistema nervioso se está recuperando. Con la ferritina baja, es el número a vigilar.', [thin('Hacen falta al menos 5 días con dato<br>para que la tendencia signifique algo')]);
+
+  const roll = rolling(vals, 7);
+  const W = 1000, H = 260, PAD_L = 46, PAD_R = 16, PAD_T = 16, PAD_B = 34;
+  const lo = Math.min(...present) * 0.94, hi = Math.max(...present) * 1.06;
+  const x = i => PAD_L + (W - PAD_L - PAD_R) * (chrono.length === 1 ? 0.5 : i / (chrono.length - 1));
+  const y = v => PAD_T + (H - PAD_T - PAD_B) * (1 - (v - lo) / (hi - lo || 1));
+
+  const s = svgRoot(W, H);
+  [0, 0.5, 1].forEach(f => {
+    const v = lo + (hi - lo) * f;
+    s.appendChild(el('line', { class:'grid-line', x1:PAD_L, x2:W - PAD_R, y1:y(v), y2:y(v) }));
+    s.appendChild(el('text', { class:'lbl', x:0, y:y(v) + 3 }, Math.round(v) + ' ms'));
+  });
+
+  vals.forEach((v, i) => {
+    if (v !== null) s.appendChild(el('circle', { class:'raw-dot', cx:x(i), cy:y(v), r:2 }));
+  });
+
+  let dPath = '', open = false;
+  roll.forEach((v, i) => {
+    if (v === null){ open = false; return; }
+    dPath += (open ? ' L ' : ' M ') + x(i).toFixed(1) + ' ' + y(v).toFixed(1);
+    open = true;
+  });
+  if (dPath) s.appendChild(el('path', { class:'mean-line', d:dPath.trim() }));
+
+  s.appendChild(el('line', { class:'axis-line', x1:PAD_L, x2:W - PAD_R, y1:H - PAD_B, y2:H - PAD_B }));
+  s.appendChild(el('text', { class:'lbl', x:PAD_L, y:H - PAD_B + 18 }, fmtDay(chrono[0].date)));
+  s.appendChild(el('text', { class:'lbl', x:W - PAD_R, y:H - PAD_B + 18, 'text-anchor':'end' },
+    fmtDay(chrono[chrono.length - 1].date)));
+
+  const half = Math.floor(present.length / 2);
+  const firstHalf = mean(present.slice(0, half));
+  const lastHalf = mean(present.slice(half));
+  const delta = (firstHalf && lastHalf) ? lastHalf - firstHalf : null;
+  const lastRoll = [...roll].reverse().find(v => v !== null);
+
+  return panel(
+    'Variabilidad cardíaca',
+    'La VFC es la señal más directa de si tu sistema nervioso se está recuperando. Con la ferritina baja, es el número a vigilar: si el hierro responde, esta línea debería subir de forma sostenida.',
+    [
+      readout([
+        { k:'Media móvil 7d', v: round(lastRoll), u:'ms' },
+        { k:'Media del periodo', v: round(mean(present)), u:'ms' },
+        { k:'Cambio 1ª vs 2ª mitad', v: delta === null ? null : (delta > 0 ? '+' : '') + round(delta),
+          u:'ms', trend: delta === null ? '' : (delta > 0 ? ' up' : ' down') },
+        { k:'Días con dato', v: present.length },
+      ]),
+      wrap(s),
+    ],
+    'Puntos = valor diario · Línea = media móvil de 7 días'
+  );
+}
+
+/* ---------- 2 · weekly readiness ---------- */
+function panelSemanas(days){
+  const byWeek = new Map();
+  for (const d of days){
+    const t = new Date(d.date + 'T00:00:00');
+    const monday = new Date(t);
+    monday.setDate(t.getDate() - ((t.getDay() + 6) % 7));
+    const key = monday.toISOString().slice(0, 10);
+    if (!byWeek.has(key)) byWeek.set(key, []);
+    byWeek.get(key).push(d);
+  }
+  const weeks = [...byWeek.entries()].sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([k, ds]) => {
+      const rec = ds.map(d => num(d.recovery_score)).filter(v => v !== null);
+      return {
+        week: k,
+        pct: rec.length ? (rec.filter(v => v >= THRESHOLD).length / rec.length) * 100 : null,
+        n: rec.length,
+        avg: mean(rec),
+      };
+    }).filter(w => w.n > 0);
+
+  if (weeks.length < 2)
+    return panel('Preparación por semana', 'Qué proporción de días de cada semana llegaste por encima del umbral de 67.', [thin('Hacen falta al menos dos semanas completas')]);
+
+  const W = 1000, H = 230, PAD_L = 46, PAD_R = 16, PAD_T = 16, PAD_B = 40;
+  const bw = (W - PAD_L - PAD_R) / weeks.length;
+  const y = v => PAD_T + (H - PAD_T - PAD_B) * (1 - v / 100);
+
+  const s = svgRoot(W, H);
+  [0, 50, 100].forEach(v => {
+    s.appendChild(el('line', { class:'grid-line', x1:PAD_L, x2:W - PAD_R, y1:y(v), y2:y(v) }));
+    s.appendChild(el('text', { class:'lbl', x:0, y:y(v) + 3 }, v + '%'));
+  });
+
+  weeks.forEach((w, i) => {
+    const h = Math.max((H - PAD_T - PAD_B) * (w.pct / 100), 1);
+    s.appendChild(el('rect', {
+      class: w.pct >= 50 ? 'bar' : 'bar soft',
+      x: PAD_L + i * bw + bw * 0.14,
+      y: H - PAD_B - h,
+      width: bw * 0.72,
+      height: h,
+    })).appendChild(el('title', {}, `${fmtDay(w.week)} · ${Math.round(w.pct)}% sobre umbral (${w.n} días)`));
+    if (weeks.length <= 16 || i % 2 === 0)
+      s.appendChild(el('text', {
+        class:'lbl', x: PAD_L + i * bw + bw / 2, y: H - PAD_B + 18, 'text-anchor':'middle',
+      }, fmtDay(w.week).slice(0, 6)));
+  });
+  s.appendChild(el('line', { class:'axis-line', x1:PAD_L, x2:W - PAD_R, y1:H - PAD_B, y2:H - PAD_B }));
+
+  const last = weeks[weeks.length - 1];
+  const overall = mean(weeks.map(w => w.pct));
+  return panel(
+    'Preparación por semana',
+    'Qué proporción de los días de cada semana amaneciste por encima del umbral. Es el indicador de si la carga que estás metiendo es sostenible o te está pasando factura.',
+    [
+      readout([
+        { k:'Última semana', v: round(last.pct, 0), u:'%' },
+        { k:'Media del periodo', v: round(overall, 0), u:'%' },
+        { k:'Semanas', v: weeks.length },
+      ]),
+      wrap(s),
+    ],
+    'Barra sólida = mayoría de días sobre umbral'
+  );
+}
+
+/* ---------- 3 · session mix ---------- */
+function panelReparto(days){
+  const counts = new Map();
+  for (const d of days){
+    const t = tipoOf(d);
+    if (t) counts.set(t, (counts.get(t) || 0) + 1);
+  }
+  if (!counts.size)
+    return panel('Reparto de sesiones', 'Qué tipo de trabajo estás haciendo en realidad.', [thin('Sin sesiones etiquetadas todavía')]);
+
+  const rows = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+  const total = rows.reduce((s, r) => s + r[1], 0);
+  const maxN = rows[0][1];
+
+  const W = 1000, rowH = 40, PAD_L = 200, PAD_R = 60;
+  const H = rows.length * rowH + 10;
+  const s = svgRoot(W, H);
+  rows.forEach(([name, n], i) => {
+    const yc = i * rowH + rowH / 2;
+    s.appendChild(el('text', { class:'lbl ink', x:0, y:yc + 3 }, name));
+    const w = (W - PAD_L - PAD_R) * (n / maxN);
+    s.appendChild(el('rect', { class:'bar', x:PAD_L, y:yc - 9, width:Math.max(w, 1), height:18 }));
+    s.appendChild(el('text', { class:'lbl', x:PAD_L + Math.max(w, 1) + 10, y:yc + 3 },
+      `${n} · ${Math.round(n / total * 100)}%`));
+  });
+
+  return panel(
+    'Reparto de sesiones',
+    'Qué tipo de trabajo estás haciendo en realidad, frente a lo que pide el plan. En bloque de base aeróbica, el volumen en Z2 debería dominar.',
+    [wrap(s)],
+    `${total} sesiones con tipo asignado en el periodo`
+  );
+}
+
+/* ---------- 4 · cost of a hard day ---------- */
+function panelCoste(days){
+  const chrono = [...days].reverse();
+  const pairs = [];
+  for (let i = 0; i < chrono.length - 1; i++){
+    const a = chrono[i], b = chrono[i + 1];
+    const gap = (new Date(b.date) - new Date(a.date)) / 86400000;
+    const strain = num(a.day_strain), rec = num(b.recovery_score);
+    if (gap === 1 && strain !== null && rec !== null) pairs.push({ strain, rec, date:a.date });
+  }
+  if (pairs.length < 8)
+    return panel('El coste del día siguiente', 'Cuánta recuperación te cuesta una sesión dura.', [thin('Hacen falta al menos 8 días consecutivos con dato')]);
+
+  const W = 1000, H = 280, PAD_L = 46, PAD_R = 16, PAD_T = 16, PAD_B = 40;
+  const sMin = Math.min(...pairs.map(p => p.strain)) - 0.5;
+  const sMax = Math.max(...pairs.map(p => p.strain)) + 0.5;
+  const x = v => PAD_L + (W - PAD_L - PAD_R) * ((v - sMin) / (sMax - sMin || 1));
+  const y = v => PAD_T + (H - PAD_T - PAD_B) * (1 - v / 100);
+
+  const s = svgRoot(W, H);
+  [0, 50, 100].forEach(v => {
+    s.appendChild(el('line', { class:'grid-line', x1:PAD_L, x2:W - PAD_R, y1:y(v), y2:y(v) }));
+    s.appendChild(el('text', { class:'lbl', x:0, y:y(v) + 3 }, v + '%'));
+  });
+  s.appendChild(el('line', { class:'thr-line', x1:PAD_L, x2:W - PAD_R, y1:y(THRESHOLD), y2:y(THRESHOLD) }));
+  s.appendChild(el('text', { class:'lbl ink', x:W - PAD_R, y:y(THRESHOLD) - 8, 'text-anchor':'end' }, 'Umbral 67'));
+
+  pairs.forEach(p => {
+    const c = el('circle', { class:'raw-dot', cx:x(p.strain), cy:y(p.rec), r:3.5 });
+    c.appendChild(el('title', {}, `${fmtDay(p.date)} · carga ${p.strain} → recuperación ${p.rec}%`));
+    s.appendChild(c);
+  });
+
+  // tercile means, drawn as short ink marks
+  const sorted = [...pairs].sort((a, b) => a.strain - b.strain);
+  const third = Math.floor(sorted.length / 3);
+  const buckets = [sorted.slice(0, third), sorted.slice(third, third * 2), sorted.slice(third * 2)];
+  const bandLabels = ['Carga baja', 'Carga media', 'Carga alta'];
+  const bandMeans = buckets.map(b => mean(b.map(p => p.rec)));
+  buckets.forEach((b, i) => {
+    if (!b.length) return;
+    const x1 = x(b[0].strain), x2 = x(b[b.length - 1].strain);
+    const yy = y(bandMeans[i]);
+    s.appendChild(el('line', { class:'axis-line', x1, x2, y1:yy, y2:yy }));
+    s.appendChild(el('text', { class:'lbl ink', x:(x1 + x2) / 2, y:yy - 10, 'text-anchor':'middle' },
+      Math.round(bandMeans[i]) + '%'));
+  });
+
+  s.appendChild(el('line', { class:'axis-line', x1:PAD_L, x2:W - PAD_R, y1:H - PAD_B, y2:H - PAD_B }));
+  s.appendChild(el('text', { class:'lbl', x:PAD_L, y:H - PAD_B + 18 }, 'Carga ' + sMin.toFixed(1)));
+  s.appendChild(el('text', { class:'lbl', x:W - PAD_R, y:H - PAD_B + 18, 'text-anchor':'end' }, 'Carga ' + sMax.toFixed(1)));
+
+  const drop = (bandMeans[0] !== null && bandMeans[2] !== null)
+    ? bandMeans[0] - bandMeans[2] : null;
+
+  return panel(
+    'El coste del día siguiente',
+    'Cada punto es un día: la carga que metiste y la recuperación con la que amaneciste al día siguiente. Las líneas horizontales son la media de cada tercio de carga.',
+    [
+      readout([
+        { k: bandLabels[0], v: round(bandMeans[0], 0), u:'%' },
+        { k: bandLabels[1], v: round(bandMeans[1], 0), u:'%' },
+        { k: bandLabels[2], v: round(bandMeans[2], 0), u:'%' },
+        { k:'Diferencia', v: drop === null ? null : round(drop, 0), u:'pts' },
+      ]),
+      wrap(s),
+    ],
+    `${pairs.length} pares de días consecutivos · Es una relación observada, no una causa demostrada`
+  );
+}
+
+/* ---------- 5 · block summary ---------- */
+function panelBloques(days){
+  const groups = new Map();
+  for (const d of days){
+    const b = bloqueOf(d.date);
+    if (!groups.has(b)) groups.set(b, []);
+    groups.get(b).push(d);
+  }
+  const order = ['Bloque 1', 'Bloque 2', 'Bloque 3'];
+  const rows = order.filter(b => groups.has(b)).map(b => {
+    const ds = groups.get(b);
+    const rec = ds.map(d => num(d.recovery_score)).filter(v => v !== null);
+    const hrv = ds.map(d => num(d.hrv_rmssd_milli)).filter(v => v !== null);
+    const slp = ds.map(d => num(d.sleep_performance_percentage)).filter(v => v !== null);
+    const str = ds.map(d => num(d.day_strain)).filter(v => v !== null);
+    const ses = ds.filter(d => (d.workouts || []).length).length;
+    return {
+      b, n: ds.length, ses,
+      rec: round(mean(rec), 0), hrv: round(mean(hrv)),
+      slp: round(mean(slp), 0), str: round(mean(str)),
+      pct: rec.length ? Math.round(rec.filter(v => v >= THRESHOLD).length / rec.length * 100) : null,
+    };
+  });
+  if (!rows.length) return null;
+
+  const t = document.createElement('table');
+  t.className = 'table';
+  t.innerHTML = `
+    <thead><tr>
+      <th>Bloque</th><th>Días</th><th>Sesiones</th><th>Recup. media</th>
+      <th>% sobre umbral</th><th>VFC media</th><th>Sueño</th><th>Carga media</th>
+    </tr></thead>
+    <tbody>${rows.map(r => `<tr>
+      <td>${r.b}</td><td>${r.n}</td><td>${r.ses}</td>
+      <td class="${r.rec === null ? 'dim' : ''}">${r.rec ?? DASH}%</td>
+      <td class="${r.pct === null ? 'dim' : ''}">${r.pct ?? DASH}%</td>
+      <td class="${r.hrv === null ? 'dim' : ''}">${r.hrv ?? DASH} ms</td>
+      <td class="${r.slp === null ? 'dim' : ''}">${r.slp ?? DASH}%</td>
+      <td class="${r.str === null ? 'dim' : ''}">${r.str ?? DASH}</td>
+    </tr>`).join('')}</tbody>`;
+
+  return panel(
+    'Resumen por bloque',
+    'Las medias de cada bloque del plan, para los checkpoints. Bloque 1 es base aeróbica, Bloque 2 la ventana quirúrgica, Bloque 3 el específico de Hyrox.',
+    [t]
+  );
+}
+
+/* ---------- boot ---------- */
+function renderScope(){
+  const opts = [
+    { id:'30', label:'30 días' },
+    { id:'90', label:'90 días' },
+    { id:'Bloque 1', label:'Bloque 1' },
+    { id:'Bloque 2', label:'Bloque 2' },
+    { id:'Bloque 3', label:'Bloque 3' },
+    { id:'todo', label:'Todo' },
+  ];
+  const box = $('scope');
+  box.querySelectorAll('.chip').forEach(c => c.remove());
+  opts.forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'chip';
+    b.textContent = o.label;
+    b.setAttribute('aria-pressed', String(scope === o.id));
+    b.addEventListener('click', () => { scope = o.id; render(); });
+    box.appendChild(b);
+  });
+}
+
+function render(){
+  renderScope();
+  const days = ALL.filter(inScope);
+  const main = $('main');
+  main.innerHTML = '';
+
+  if (!days.length){
+    main.appendChild(thin('Sin datos en este periodo'));
+    $('span').textContent = DASH;
+    return;
+  }
+
+  const chrono = [...days].reverse();
+  $('span').textContent = `${fmtDay(chrono[0].date)} — ${fmtDay(chrono[chrono.length - 1].date)} · ${days.length} días`;
+
+  [panelHRV(days), panelSemanas(days), panelReparto(days), panelCoste(days), panelBloques(days)]
+    .filter(Boolean).forEach(p => main.appendChild(p));
+}
+
+async function boot(){
+  try {
+    const r = await fetch('data/index.json', { cache:'no-store' });
+    if (r.ok) ALL = await r.json();
+  } catch (e) {}
+
+  if (!ALL.length){
+    try {
+      const r = await fetch('data/manifest.json', { cache:'no-store' });
+      if (r.ok){
+        const m = await r.json();
+        const res = await Promise.all(m.map(d => fetch(`data/${d}.json`, { cache:'no-store' })
+          .then(x => x.ok ? x.json() : null).catch(() => null)));
+        ALL = res.filter(Boolean);
+      }
+    } catch (e) {}
+  }
+
+  ALL = ALL.filter(d => d && d.date).sort((a, b) => b.date.localeCompare(a.date));
+
+  if (!ALL.length){
+    $('main').appendChild(thin('Sin datos<br>El primer sync llenará esto'));
+    return;
+  }
+  render();
+}
+
+boot();
+</script>
+</body>
+</html>
