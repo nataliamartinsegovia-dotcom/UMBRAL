@@ -13,6 +13,7 @@ import base64
 import json
 import os
 import sys
+import time
 from datetime import datetime, timedelta, timezone
 
 import requests
@@ -77,12 +78,52 @@ def whoop_get(path, token, params=None):
     return resp.json()
 
 
+def whoop_get_all(path, token, start, max_pages=40):
+    """Fetches every page of a WHOOP collection endpoint.
+
+    The v2 API caps `limit` at 25 and paginates with `next_token`, so a long
+    backfill needs to follow the chain rather than take the first page only.
+    """
+    records = []
+    params = {"start": start, "limit": 25}
+    for page in range(max_pages):
+        data = whoop_get(path, token, params)
+        records.extend(data.get("records", []))
+        token_next = data.get("next_token")
+        if not token_next:
+            break
+        params = {"start": start, "limit": 25, "nextToken": token_next}
+        time.sleep(0.15)   # stay comfortably inside 100 req/min
+    else:
+        print(f"::warning::{path}: se alcanzó el máximo de {max_pages} páginas")
+    return records
+
+
+def decide_days_back():
+    """First run backfills history; afterwards only the last couple of days.
+
+    Override with the DAYS_BACK environment variable if ever needed.
+    """
+    override = os.environ.get("DAYS_BACK")
+    if override:
+        return int(override)
+    existing = [f for f in os.listdir(DATA_DIR)
+                if f.endswith(".json") and f not in ("index.json", "manifest.json")] \
+        if os.path.isdir(DATA_DIR) else []
+    if len(existing) < 30:
+        print(f"Solo hay {len(existing)} días guardados: recuperando historial de 180 días.")
+        return 180
+    return 2
+
+
 def fetch_window(token, days_back=2):
     start = (datetime.now(timezone.utc) - timedelta(days=days_back)).isoformat()
-    recovery = whoop_get("/recovery", token, {"start": start, "limit": 10}).get("records", [])
-    sleep = whoop_get("/activity/sleep", token, {"start": start, "limit": 10}).get("records", [])
-    workouts = whoop_get("/activity/workout", token, {"start": start, "limit": 10}).get("records", [])
-    cycles = whoop_get("/cycle", token, {"start": start, "limit": 10}).get("records", [])
+    recovery = whoop_get_all("/recovery", token, start)
+    sleep = whoop_get_all("/activity/sleep", token, start)
+    workouts = whoop_get_all("/activity/workout", token, start)
+    cycles = whoop_get_all("/cycle", token, start)
+    print(f"Descargado: {len(recovery)} recuperaciones, {len(sleep)} sueños, "
+          f"{len(workouts)} entrenos, {len(cycles)} ciclos")
     return recovery, sleep, workouts, cycles
 
 
@@ -160,7 +201,7 @@ def main():
     access_token, new_refresh_token = refresh_token()
     write_back_refresh_token(new_refresh_token)
 
-    recovery, sleep, workouts, cycles = fetch_window(access_token, days_back=2)
+    recovery, sleep, workouts, cycles = fetch_window(access_token, days_back=decide_days_back())
 
     by_date_recovery = {date_key(r["created_at"]): r for r in recovery} if recovery else {}
     by_date_sleep = {date_key(s["start"]): s for s in sleep} if sleep else {}
