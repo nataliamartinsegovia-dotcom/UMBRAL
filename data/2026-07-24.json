@@ -1,0 +1,19 @@
+{
+  "date": "2026-07-24",
+  "notes": "",
+  "photos": [],
+  "workouts": [
+    {
+      "sport_name": "dog-walking",
+      "strain": 0.0,
+      "average_heart_rate": 80,
+      "duration_min": 10
+    },
+    {
+      "sport_name": "running",
+      "strain": 13.8,
+      "average_heart_rate": 136,
+      "duration_min": 54
+    }
+  ]
+}
