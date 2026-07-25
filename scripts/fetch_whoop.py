@@ -22,6 +22,7 @@ WHOOP_TOKEN_URL = "https://api.prod.whoop.com/oauth/oauth2/token"
 WHOOP_API_BASE = "https://api.prod.whoop.com/developer/v2"
 DATA_DIR = "data"
 MANIFEST_PATH = os.path.join(DATA_DIR, "manifest.json")
+INDEX_PATH = os.path.join(DATA_DIR, "index.json")
 
 
 def env(name):
@@ -104,7 +105,11 @@ def save_json(path, obj):
 
 def merge_day(date, recovery_rec, sleep_rec, cycle_rec, workout_recs):
     path = os.path.join(DATA_DIR, f"{date}.json")
-    day = load_json(path, {"date": date, "notes": "", "photos": []})
+    day = load_json(path, {"date": date, "notes": "", "photos": [], "tipo": None, "etiquetas": []})
+    # never clobber fields the user authored in admin.html
+    day.setdefault("notes", "")
+    day.setdefault("photos", [])
+    day.setdefault("etiquetas", [])
 
     if cycle_rec:
         day["day_strain"] = round(cycle_rec.get("score", {}).get("strain", 0), 1) if cycle_rec.get("score") else day.get("day_strain")
@@ -133,13 +138,22 @@ def merge_day(date, recovery_rec, sleep_rec, cycle_rec, workout_recs):
     return date
 
 
-def update_manifest(dates):
-    manifest = load_json(MANIFEST_PATH, [])
-    for d in dates:
-        if d not in manifest:
-            manifest.append(d)
-    manifest = sorted(set(manifest), reverse=True)
-    save_json(MANIFEST_PATH, manifest)
+def rebuild_index():
+    """Consolidates every data/YYYY-MM-DD.json into a single data/index.json so
+    the dashboard loads in one request instead of one per day."""
+    days = []
+    for name in os.listdir(DATA_DIR):
+        if not name.endswith(".json") or name in ("index.json", "manifest.json"):
+            continue
+        try:
+            days.append(load_json(os.path.join(DATA_DIR, name), None))
+        except Exception as e:
+            print(f"::warning::No se pudo leer {name}: {e}")
+    days = [d for d in days if d and d.get("date")]
+    days.sort(key=lambda d: d["date"], reverse=True)
+    save_json(INDEX_PATH, days)
+    save_json(MANIFEST_PATH, [d["date"] for d in days])
+    return len(days)
 
 
 def main():
@@ -161,8 +175,9 @@ def main():
         merge_day(d, by_date_recovery.get(d), by_date_sleep.get(d), by_date_cycle.get(d), by_date_workouts.get(d))
         touched.append(d)
 
-    update_manifest(touched)
-    print(f"Updated: {touched}")
+    total = rebuild_index()
+    print(f"Días actualizados: {touched}")
+    print(f"Índice reconstruido: {total} días en total")
 
 
 if __name__ == "__main__":
