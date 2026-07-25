@@ -25,5 +25,13 @@
     "photos": [],
     "day_strain": 14.0,
     "etiquetas": []
+  },
+  {
+    "date": "2026-07-18",
+    "notes": "",
+    "photos": [],
+    "tipo": null,
+    "etiquetas": [],
+    "day_strain": 0.0
   }
 ]
