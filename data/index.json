@@ -1,5 +1,41 @@
 [
   {
+    "date": "2026-07-26",
+    "notes": "",
+    "photos": [],
+    "tipo": null,
+    "etiquetas": [],
+    "recovery_score": 96.0,
+    "hrv_rmssd_milli": 116.9,
+    "resting_heart_rate": 56.0,
+    "workouts": [
+      {
+        "sport_name": "dog-walking",
+        "strain": 0.0,
+        "average_heart_rate": 83,
+        "duration_min": 20
+      }
+    ]
+  },
+  {
+    "date": "2026-07-25",
+    "notes": "",
+    "photos": [],
+    "tipo": null,
+    "etiquetas": [],
+    "day_strain": 0.3,
+    "sleep_performance_percentage": 82.0,
+    "sleep_efficiency_percentage": 85.96345,
+    "workouts": [
+      {
+        "sport_name": "high-stress-work",
+        "strain": null,
+        "average_heart_rate": 50,
+        "duration_min": 13
+      }
+    ]
+  },
+  {
     "date": "2026-07-24",
     "notes": "",
     "photos": [],
@@ -17,7 +53,8 @@
         "duration_min": 54
       }
     ],
-    "etiquetas": []
+    "etiquetas": [],
+    "day_strain": 4.2
   },
   {
     "date": "2026-07-23",
