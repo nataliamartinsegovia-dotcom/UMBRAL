@@ -38,7 +38,7 @@ body{
   font-family:var(--serif); font-weight:300; font-size:16px; line-height:1.6;
   font-variant-numeric:tabular-nums;
   -webkit-font-smoothing:antialiased;
-  padding:24px 26px 70px; max-width:1240px; margin:0 auto;
+  padding:24px clamp(26px,3.4vw,72px) 70px; max-width:none; margin:0;
 }
 button{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer}
 svg{display:block}
@@ -82,7 +82,7 @@ nav.tabs button[aria-current="true"]{color:var(--tinta);border-color:var(--tinta
 .est .cifra u{text-decoration:none;font-size:.2em;color:var(--gris)}
 .est .an{font-family:var(--mano);font-size:30px;color:var(--rubia);
   display:inline-block;transform:rotate(-2.5deg);margin-left:14px;vertical-align:middle}
-.est p.txt{color:var(--gris);max-width:42ch;margin-top:14px}
+.est p.txt{color:var(--gris);max-width:46ch;margin-top:14px}
 .est .otros{display:flex;gap:34px;flex-wrap:wrap;margin-top:24px;
   padding-top:16px;border-top:1px solid var(--hilo)}
 .est .otros .k{display:block;margin-bottom:5px}
@@ -464,10 +464,13 @@ const media = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : null;
 const r1 = v => v==null||Number.isNaN(v) ? null : Math.round(v*10)/10;
 const hoyISO = () => new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
 const HOY = hoyISO();
-const D = iso => new Date(iso+'T00:00:00');
-const fd = (iso,o) => D(iso).toLocaleDateString('es-ES',o||{day:'2-digit',month:'short'}).replace('.','');
-const addD = (iso,n) => { const d=D(iso); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); };
-const lunesDe = iso => { const d=D(iso); d.setDate(d.getDate()-((d.getDay()+6)%7)); return d.toISOString().slice(0,10); };
+/* Toda fecha se ancla en UTC. Anclarla en hora local hacía que, al este de
+   Greenwich, toISOString() devolviera el día anterior: sumar un día daba el
+   mismo día y rango() no terminaba nunca. */
+const D = iso => new Date(iso+'T00:00:00Z');
+const fd = (iso,o) => D(iso).toLocaleDateString('es-ES',{timeZone:'UTC',...(o||{day:'2-digit',month:'short'})}).replace('.','');
+const addD = (iso,n) => { const d=D(iso); d.setUTCDate(d.getUTCDate()+n); return d.toISOString().slice(0,10); };
+const lunesDe = iso => { const d=D(iso); d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7)); return d.toISOString().slice(0,10); };
 
 let DIAS=[], PLANES=[], S=[], porFecha=new Map();
 
@@ -555,8 +558,13 @@ function paraDibujo(iso){
            over:(d?.recovery_score??0)>=THR };
 }
 function rango(desde,hasta){
-  const out=[]; let c=desde;
-  while(c<=hasta){ out.push(paraDibujo(c)); c=addD(c,1); }
+  const out=[]; let c=desde, guarda=0;
+  while(c<=hasta && guarda++<400){
+    out.push(paraDibujo(c));
+    const sig=addD(c,1);
+    if(sig===c) break;          // si la fecha no avanza, salir en vez de colgarse
+    c=sig;
+  }
   return out;
 }
 
@@ -641,7 +649,7 @@ function ficha(s){
 
 /* ---------- ubicación ---------- */
 function ubic(){
-  const hoy=D(HOY), dia=(hoy.getDay()+6)%7;
+  const hoy=D(HOY), dia=(hoy.getUTCDay()+6)%7;
   const lunes=D(lunesDe(HOY));
   const sem=Math.max(1,Math.min(CFG.SEMANAS_BLOQUE,
     Math.floor((lunes-D(CFG.INICIO_BLOQUE))/6048e5)+1));
