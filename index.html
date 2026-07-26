@@ -2,648 +2,1169 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UMBRAL</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="supported-color-schemes" content="light">
+<meta name="theme-color" content="#EFE9DC">
+<title>Umbral</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400;500&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=IBM+Plex+Mono:wght@300;400&family=Caveat:wght@500&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --paper:#FBFAF7; --ink:#1A1916; --ash:#8E8B82;
-    --pale:#CFCCC4; --rule:#E5E2DA; --ghost:#EFEDE7;
-    --edge:88px; --measure:1280px;
-  }
-  *{ box-sizing:border-box; margin:0; padding:0; }
-  html{ background:var(--paper); }
-  body{
-    background:var(--paper); color:var(--ink);
-    font-family:'Jost', sans-serif; font-weight:400;
-    -webkit-font-smoothing:antialiased;
-    max-width:var(--measure); margin:0 auto;
-    padding:56px var(--edge) 160px;
-  }
-  .cap{
-    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
-    letter-spacing:0.24em; text-transform:uppercase; color:var(--ash);
-  }
+/* ===================================================================
+   UMBRAL · identidad textil
+   Tejido es la tela y es el cuerpo. El umbral es de los dos.
+   =================================================================== */
+:root{
+  /* superficies */
+  --lino:#EFE9DC; --papel:#F6F2E9; --sombra:#E6DFCF; --hilo:#DCD3C0;
+  /* tinta */
+  --tinta:#25231F; --gris:#6A655C;
+  /* tintes: disciplina */
+  --rubia:#A8443A; --indigo:#2E4057; --ocre:#C89A3C;
+  --cardo:#6B7F63; --hierro:#55534E; --crudo:#DCD3C0;
+  /* rampa de zonas */
+  --z0:#DCD3C0; --z1:#B9B49C; --z2:#6B7F63; --z3:#C89A3C; --z4:#A8443A; --z5:#6B2A24;
 
-  /* masthead */
-  .masthead{
-    display:flex; justify-content:space-between; align-items:flex-end; gap:40px;
-    padding-bottom:28px; border-bottom:1px solid var(--ink);
-  }
-  .wordmark{
-    font-weight:200; font-size:clamp(48px,7vw,92px); line-height:0.9;
-    letter-spacing:0.16em; text-transform:uppercase;
-  }
-  .masthead .ident{ text-align:right; line-height:2.1; white-space:nowrap; }
-  .masthead .ident b{ color:var(--ink); font-weight:400; }
+  --serif:'Newsreader',Georgia,serif;
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --mano:'Caveat',cursive;
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--lino);color-scheme:light}
+body{
+  background:var(--lino); color:var(--tinta);
+  font-family:var(--serif); font-weight:300; font-size:16px; line-height:1.6;
+  font-variant-numeric:tabular-nums;
+  -webkit-font-smoothing:antialiased;
+  padding:24px 26px 70px; max-width:1240px; margin:0 auto;
+}
+button{font:inherit;color:inherit;background:none;border:none;padding:0;cursor:pointer}
+svg{display:block}
 
-  /* threshold band */
-  .band{ padding:44px 0 0; border-bottom:1px solid var(--rule); margin-bottom:56px; }
-  .band-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:26px; }
-  .chart{ position:relative; height:148px; display:flex; align-items:flex-end; gap:2px; padding-bottom:28px; }
-  .threshold-line{
-    position:absolute; left:0; right:0; bottom:calc(28px + (120px * 0.67));
-    border-top:1px solid var(--ink); pointer-events:none;
-  }
-  .threshold-line span{
-    position:absolute; right:0; top:-19px;
-    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:9px;
-    letter-spacing:0.2em; text-transform:uppercase; color:var(--ink);
-    background:var(--paper); padding-left:10px;
-  }
-  .tick{ flex:1; min-width:2px; background:var(--pale); cursor:pointer; }
-  .tick.over{ background:var(--ink); }
-  .tick.dim{ background:var(--ghost); }
-  .tick:hover{ opacity:0.65; }
-  .chart-axis{
-    position:absolute; left:0; right:0; bottom:0; display:flex; justify-content:space-between;
-    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:9px;
-    letter-spacing:0.16em; color:var(--ash); padding-top:10px; border-top:1px solid var(--rule);
-  }
+.m{font-family:var(--mono);font-weight:400;font-size:10px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--gris)}
+.gr{color:var(--gris)}
+.h{font-family:var(--mano)}
 
-  /* readings */
-  .readings{
-    display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--rule);
-    border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); margin-bottom:72px;
-  }
-  .reading{ background:var(--paper); padding:30px 28px 34px 0; }
-  .reading .k{ display:block; margin-bottom:22px; }
-  .reading .v{ font-weight:200; font-size:60px; line-height:0.86; letter-spacing:-0.01em; }
-  .reading .v u{
-    text-decoration:none; font-family:'IBM Plex Mono', monospace; font-weight:300;
-    font-size:11px; letter-spacing:0.12em; color:var(--ash); margin-left:6px; vertical-align:super;
-  }
-  .reading.under .v{ color:var(--pale); }
+/* ---------- logotipo ---------- */
+.wm{font-family:var(--serif);font-style:italic;font-weight:400;font-size:26px;
+  letter-spacing:.03em;line-height:1;white-space:nowrap}
+.wm sup{font-size:10px;font-style:normal;vertical-align:super;font-family:var(--mono)}
 
-  /* ---- filters ---- */
-  .filters{ margin-bottom:8px; }
-  .search-row{
-    display:flex; align-items:baseline; gap:20px;
-    border-bottom:1px solid var(--ink); padding-bottom:14px; margin-bottom:22px;
-  }
-  .search-row input{
-    flex:1; border:none; background:transparent; color:var(--ink);
-    font-family:'Jost', sans-serif; font-weight:300; font-size:24px; letter-spacing:0.01em;
-    padding:0;
-  }
-  .search-row input::placeholder{ color:var(--pale); }
-  .search-row input:focus{ outline:none; }
-  .search-hint{ font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:9px;
-    letter-spacing:0.2em; text-transform:uppercase; color:var(--pale); white-space:nowrap; }
+/* ---------- barra ---------- */
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;
+  padding-bottom:13px;border-bottom:1px solid var(--tinta);margin-bottom:26px;flex-wrap:wrap}
+nav.tabs{display:flex;gap:2px;flex-wrap:wrap}
+nav.tabs button{padding:6px 12px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--gris);
+  border:1px solid transparent}
+nav.tabs button:hover{color:var(--tinta)}
+nav.tabs button[aria-current="true"]{color:var(--tinta);border-color:var(--tinta)}
+.burger{display:none;width:42px;height:42px;border:1px solid var(--tinta);
+  align-items:center;justify-content:center}
+.burger i{display:block;width:16px;height:1px;background:var(--tinta);position:relative}
+.burger i::before,.burger i::after{content:'';position:absolute;left:0;width:16px;height:1px;background:var(--tinta)}
+.burger i::before{top:-5px}.burger i::after{top:5px}
 
-  .chipset{ margin-bottom:14px; }
-  .chipset-label{
-    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:9px;
-    letter-spacing:0.24em; text-transform:uppercase; color:var(--ash);
-    display:block; margin-bottom:10px;
-  }
-  .chips{ display:flex; flex-wrap:wrap; gap:6px; }
-  .chip{
-    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
-    letter-spacing:0.14em; text-transform:uppercase;
-    padding:7px 13px; border:1px solid var(--rule); background:transparent;
-    color:var(--ash); cursor:pointer; white-space:nowrap;
-  }
-  .chip:hover{ border-color:var(--ash); color:var(--ink); }
-  .chip[aria-pressed="true"]{ background:var(--ink); border-color:var(--ink); color:var(--paper); }
-  .chip .n{ opacity:0.55; margin-left:6px; }
+/* ---------- panel ---------- */
+.pan{border:1px solid var(--tinta);background:var(--papel);margin-bottom:16px}
+.pan>hgroup{display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+  padding:10px 16px;border-bottom:1px solid var(--hilo);flex-wrap:wrap}
+.pan>hgroup h2{font-style:italic;font-weight:400;font-size:19px;line-height:1.2}
+.pan>.in{padding:20px 16px 22px}
+.pan>.in.flush{padding:0}
 
-  .more-toggle{
-    background:none; border:none; padding:0; cursor:pointer;
-    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:9px;
-    letter-spacing:0.2em; text-transform:uppercase; color:var(--ash);
-    border-bottom:1px solid var(--rule); margin-top:6px;
-  }
-  .more-toggle:hover{ color:var(--ink); border-color:var(--ink); }
-  .extra-filters[hidden]{ display:none; }
+/* ---------- estado ---------- */
+.est{display:grid;grid-template-columns:1.25fr 340px;gap:34px;align-items:start}
+.est .cifra{font-size:clamp(70px,10vw,112px);line-height:.82;font-weight:300;letter-spacing:-.045em}
+.est .cifra u{text-decoration:none;font-size:.2em;color:var(--gris)}
+.est .an{font-family:var(--mano);font-size:30px;color:var(--rubia);
+  display:inline-block;transform:rotate(-2.5deg);margin-left:14px;vertical-align:middle}
+.est p.txt{color:var(--gris);max-width:42ch;margin-top:14px}
+.est .otros{display:flex;gap:34px;flex-wrap:wrap;margin-top:24px;
+  padding-top:16px;border-top:1px solid var(--hilo)}
+.est .otros .k{display:block;margin-bottom:5px}
+.est .otros .v{font-size:28px;line-height:1;font-weight:300;letter-spacing:-.02em}
+.est .otros .v u{text-decoration:none;font-size:13px;color:var(--gris)}
 
-  .result-row{
-    display:flex; justify-content:space-between; align-items:baseline; gap:20px;
-    padding:16px 0 14px; border-bottom:1px solid var(--ink); margin-top:20px;
-  }
-  .clear-btn{
-    background:none; border:none; padding:0; cursor:pointer;
-    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
-    letter-spacing:0.2em; text-transform:uppercase; color:var(--ink);
-    border-bottom:1px solid var(--ink);
-  }
-  .clear-btn[hidden]{ display:none; }
+/* etiqueta de composición */
+.etq{border:1px solid var(--tinta);background:var(--lino);padding:18px 18px 20px}
+.etq .marca{font-style:italic;font-size:18px;margin-bottom:2px}
+.etq .sub{margin-bottom:14px}
+.etq table{width:100%;border-collapse:collapse}
+.etq td{padding:6px 0;border-bottom:1px solid var(--hilo);font-size:14px}
+.etq td:last-child{text-align:right;font-family:var(--mono);font-size:12px}
+.etq td:first-child{color:var(--gris)}
+.etq .cui{margin-top:13px;padding-top:11px;border-top:1px solid var(--tinta)}
+.etq .cui p{font-size:14px;line-height:1.5;color:var(--gris);margin-top:5px}
 
-  /* ---- log ---- */
-  .entry{
-    display:grid; grid-template-columns:132px 1fr 200px; gap:36px;
-    padding:38px 0; border-bottom:1px solid var(--rule); align-items:start;
-  }
-  .entry .stamp{
-    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
-    letter-spacing:0.16em; text-transform:uppercase; color:var(--ink); line-height:2;
-  }
-  .entry .stamp em{ display:block; font-style:normal; color:var(--ash); }
-  .entry .stamp .blk{ display:block; color:var(--pale); margin-top:8px; }
-  .entry .col-main{ min-width:0; }
-  .entry .vitals{
-    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
-    letter-spacing:0.14em; text-transform:uppercase; color:var(--ash);
-    padding-bottom:16px; border-bottom:1px solid var(--rule); margin-bottom:18px;
-    display:flex; gap:26px; flex-wrap:wrap;
-  }
-  .entry .vitals i{ font-style:normal; color:var(--ink); }
-  .entry .session{
-    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
-    letter-spacing:0.18em; text-transform:uppercase; color:var(--ink);
-    margin-bottom:14px; line-height:2;
-  }
-  .entry .tags{ display:flex; flex-wrap:wrap; gap:5px; margin-bottom:14px; }
-  .entry .tag{
-    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:9px;
-    letter-spacing:0.16em; text-transform:uppercase; color:var(--ash);
-    border:1px solid var(--rule); padding:4px 9px; cursor:pointer; background:none;
-  }
-  .entry .tag:hover{ color:var(--ink); border-color:var(--ink); }
-  .entry .tag.tipo{ color:var(--ink); border-color:var(--ink); }
-  .entry .note{ font-weight:300; font-size:17px; line-height:1.6; max-width:54ch; }
-  .entry .note.void{ color:var(--pale); font-weight:200; }
-  mark{ background:var(--ghost); color:var(--ink); }
-  .entry .plates{ display:grid; grid-template-columns:1fr 1fr; gap:4px; }
-  .entry .plates img{ width:100%; aspect-ratio:3/4; object-fit:cover; display:block; }
-  .entry .plates:empty{ display:none; }
+/* ---------- la tela ---------- */
+.tela svg{width:100%;height:auto}
+.telapie{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  padding:10px 16px;border-top:1px solid var(--hilo)}
 
-  .void-state{
-    padding:110px 0; text-align:center;
-    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
-    letter-spacing:0.24em; text-transform:uppercase; color:var(--pale); line-height:2.6;
-  }
-  .load-more{
-    display:block; width:100%; margin-top:32px; padding:18px;
-    background:none; border:1px solid var(--rule); cursor:pointer;
-    font-family:'IBM Plex Mono', monospace; font-weight:300; font-size:10px;
-    letter-spacing:0.24em; text-transform:uppercase; color:var(--ink);
-  }
-  .load-more:hover{ border-color:var(--ink); }
-  .load-more[hidden]{ display:none; }
+/* ---------- glifo ---------- */
+.gl{overflow:visible}
+.glifo-lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:9px}
+.glifo-lista .c{position:relative;aspect-ratio:1}
+.glifo-lista .c svg{width:100%;height:100%}
+.glifo-lista .c i{position:absolute;top:-1px;left:1px;font-family:var(--mono);
+  font-size:8px;font-style:normal;color:var(--gris)}
 
-  footer{
-    margin-top:88px; padding-top:24px; border-top:1px solid var(--ink);
-    display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap;
-  }
-  footer a{ color:var(--ink); text-decoration:none; border-bottom:1px solid var(--ink); padding-bottom:2px; }
-  footer a:hover{ color:var(--ash); border-color:var(--ash); }
-  :focus-visible{ outline:1px solid var(--ink); outline-offset:4px; }
+/* ---------- índice ---------- */
+.idx{border-top:1px solid var(--hilo)}
+.cols{display:grid;gap:14px;padding:8px 16px;border-bottom:1px solid var(--hilo)}
+.cols .tl{display:flex;gap:12px;justify-content:flex-end;align-items:baseline}
+.it{border-bottom:1px solid var(--hilo)}
+.it>.ln{display:grid;gap:14px;width:100%;text-align:left;padding:11px 16px;align-items:center}
+.it>.ln:hover{background:var(--sombra)}
+.it[data-open="1"]>.ln{background:var(--sombra)}
+.it .g{width:34px;height:34px;flex-shrink:0}
+.it .t{font-size:17px;line-height:1.3}
+.it .t b{font-weight:500}
+.it .s{color:var(--gris);font-size:13px}
+.it .e{text-align:right;color:var(--gris);font-family:var(--mono);font-size:11px;white-space:nowrap}
+.it .e.on{color:var(--tinta)}
+.it .bd{display:none;padding:4px 16px 20px;background:var(--sombra)}
+.it[data-open="1"] .bd{display:block}
 
-  @media (max-width:1100px){
-    :root{ --edge:48px; }
-    .entry{ grid-template-columns:110px 1fr; }
-    .entry .plates{ grid-column:2; grid-template-columns:repeat(4,1fr); margin-top:18px; }
-  }
-  @media (max-width:720px){
-    :root{ --edge:22px; }
-    body{ padding-top:36px; }
-    .masthead{ flex-direction:column; align-items:flex-start; gap:22px; }
-    .masthead .ident{ text-align:left; }
-    .readings{ grid-template-columns:1fr 1fr; }
-    .reading{ padding-right:16px; }
-    .reading .v{ font-size:44px; }
-    .search-row input{ font-size:19px; }
-    .search-hint{ display:none; }
-    .entry{ grid-template-columns:1fr; gap:16px; }
-    .entry .plates{ grid-column:1; grid-template-columns:repeat(3,1fr); }
-  }
+.c-log{grid-template-columns:34px minmax(0,1.5fr) 120px minmax(0,1.1fr) 78px}
+.c-sem{grid-template-columns:34px 88px minmax(0,1.5fr) 100px 92px 78px}
+.c-mar{grid-template-columns:34px minmax(0,1.4fr) 96px 80px minmax(0,1fr)}
+.c-ana{grid-template-columns:34px minmax(0,2fr) 140px}
+.c-plan{grid-template-columns:34px 88px minmax(0,1fr) 110px 96px}
+
+/* ficha */
+.det{display:grid;grid-template-columns:110px minmax(0,1fr) minmax(0,1fr);gap:18px 24px;padding-top:14px}
+.det .k{display:block;margin-bottom:3px}
+.det p{max-width:54ch;margin-bottom:12px}
+.spec{width:100%;border-collapse:collapse}
+.spec tr{border-bottom:1px solid var(--hilo)}
+.spec td{padding:6px 0;font-size:14px}
+.spec td:last-child{text-align:right;font-family:var(--mono);font-size:12px}
+.spec td:first-child{color:var(--gris)}
+.det .gbig{width:110px;height:110px}
+
+/* ---------- leyenda ---------- */
+.ley{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:0}
+.ley>div{padding:14px 16px 16px;border-right:1px solid var(--hilo)}
+.ley>div:last-child{border-right:none}
+.ley .fila{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+.ley .fila svg{width:42px;height:42px;flex-shrink:0}
+.ley b{font-weight:500;font-size:15px;display:block}
+.ley span{color:var(--gris);font-size:13.5px;line-height:1.45;display:block}
+.muestra{height:20px;margin-bottom:8px}
+
+/* ---------- controles ---------- */
+.ctr{display:flex;gap:8px;flex-wrap:wrap}
+.grp{border:1px solid var(--hilo);padding:9px 11px 11px;background:var(--lino)}
+.grp>.m{display:block;margin-bottom:8px}
+.ops{display:flex;gap:5px;flex-wrap:wrap}
+.op{border:1px solid var(--hilo);padding:7px 11px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;background:var(--papel);color:var(--gris);
+  min-height:34px}
+.op:hover{border-color:var(--tinta);color:var(--tinta)}
+.op[aria-pressed="true"]{background:var(--tinta);color:var(--lino);border-color:var(--tinta)}
+/* selección circulada, de Balenciaga */
+.pick{display:inline-flex;gap:3px;align-items:center}
+.pick button{position:relative;padding:6px 11px;font-size:16px;min-height:34px;color:var(--gris)}
+.pick button[aria-pressed="true"]{color:var(--tinta)}
+.pick button[aria-pressed="true"]::after{content:'';position:absolute;inset:0 -2px;
+  border:1.4px solid var(--tinta);border-radius:50%;transform:rotate(-4deg) scale(1.05);
+  pointer-events:none}
+
+/* ---------- formulario ---------- */
+.f{display:grid;gap:11px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));margin-bottom:12px}
+input,select,textarea{width:100%;font-family:var(--serif);font-size:16px;font-weight:300;
+  color:var(--tinta);background:transparent;border:none;border-bottom:1px solid var(--hilo);
+  padding:7px 0;border-radius:0}
+input:focus,select:focus,textarea:focus{outline:none;border-bottom-color:var(--tinta)}
+input::placeholder,textarea::placeholder{color:#B5AE9C}
+textarea{resize:vertical;min-height:34px;line-height:1.5}
+label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--gris);margin-bottom:2px}
+.acc{display:flex;gap:14px;align-items:center;flex-wrap:wrap;
+  padding:13px 16px;border-top:1px solid var(--hilo)}
+
+/* ---------- vacío ---------- */
+.vac{padding:40px 16px;text-align:center;color:var(--gris);font-size:15px;line-height:1.6}
+.vac b{display:block;font-weight:500;color:var(--tinta);margin-bottom:5px}
+
+/* ---------- menú móvil ---------- */
+.menu{position:fixed;inset:0;background:var(--lino);z-index:60;display:none;
+  flex-direction:column;padding:20px 22px calc(24px + env(safe-area-inset-bottom,0px));
+  overflow-y:auto}
+.menu[data-open="1"]{display:flex}
+.menu .mh{display:flex;justify-content:space-between;align-items:center;
+  padding-bottom:13px;border-bottom:1px solid var(--tinta);margin-bottom:20px}
+.menu ol{list-style:none;border-top:1px solid var(--hilo)}
+.menu li{border-bottom:1px solid var(--hilo)}
+.menu li button{display:grid;grid-template-columns:1fr auto;gap:10px;width:100%;
+  text-align:left;min-height:56px;align-items:center;padding:0 2px}
+.menu li button .t2{font-style:italic;font-size:22px;font-weight:400}
+.menu li button .d2{font-family:var(--mono);font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--gris)}
+.menu li button[aria-current="true"] .t2{color:var(--rubia)}
+.menu .aj{margin-top:24px;padding-top:16px;border-top:1px solid var(--tinta)}
+
+.pie{margin-top:34px;padding-top:14px;border-top:1px solid var(--hilo);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+::selection{background:var(--tinta);color:var(--lino)}
+:focus-visible{outline:1.5px solid var(--rubia);outline-offset:2px}
+
+/* ================= responsive ================= */
+@media(max-width:960px){
+  .est{grid-template-columns:1fr;gap:24px}
+  .det{grid-template-columns:1fr;gap:12px}
+  .det .gbig{width:88px;height:88px}
+}
+@media(max-width:760px){
+  body{padding:16px 16px 40px}
+  nav.tabs{display:none}
+  .burger{display:flex}
+  .wm{font-size:22px}
+  .pan>.in{padding:16px 14px 18px}
+  .cols{display:none}
+  .it>.ln{grid-template-columns:34px minmax(0,1fr) auto;gap:3px 12px;
+    padding:13px 14px;align-items:start}
+  .it>.ln>.g{grid-row:1/span 2}
+  .it>.ln>.t{grid-column:2;grid-row:1}
+  .it>.ln>.e{grid-column:3;grid-row:1}
+  .it>.ln>.s{grid-column:2/-1}
+  .it>.ln>.s:empty{display:none}
+  .it .bd{padding:4px 14px 18px}
+  .est .cifra{font-size:64px}
+  .est .an{font-size:24px;margin-left:8px}
+  .est .otros{gap:22px}
+  .est .otros .v{font-size:23px}
+  .glifo-lista{grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:7px}
+  .ley>div{border-right:none;border-bottom:1px solid var(--hilo)}
+  .ley>div:last-child{border-bottom:none}
+  .f{grid-template-columns:1fr}
+  .op{min-height:40px;padding:10px 13px}
+  .pick button{min-height:40px;padding:9px 13px}
+  .acc{padding:14px}
+  .acc .op{flex:1;text-align:center;justify-content:center}
+}
+
 </style>
 </head>
 <body>
 
-  <header class="masthead">
-    <h1 class="wordmark">Umbral</h1>
-    <div class="ident cap">
-      <div>Hyrox Solo — <b>Sub 1:30:00</b></div>
-      <div>Madrid — <b id="today">—</b></div>
-      <div>Restan <b id="countdown">—</b> días</div>
-    </div>
-  </header>
+<div class="top">
+  <span class="wm">Umbral<sup>&reg;</sup></span>
+  <nav class="tabs" id="tabs"></nav>
+  <span class="m" id="cuenta"></span>
+  <button class="burger" id="burger" aria-label="Menú" aria-expanded="false"><i></i></button>
+</div>
 
-  <section class="band">
-    <div class="band-head">
-      <span class="cap">Recuperación — últimos 30 días</span>
-      <span class="cap" id="over-count">—</span>
-    </div>
-    <div class="chart" id="chart">
-      <div class="threshold-line"><span>Umbral 67</span></div>
-      <div class="chart-axis"><span id="axis-from">—</span><span id="axis-to">—</span></div>
-    </div>
-  </section>
+<main id="main"></main>
 
-  <section class="readings" id="readings"></section>
+<div class="pie">
+  <span class="m">Umbral &mdash; registro personal</span>
+  <span class="m">WHOOP v2 &middot; sincroniza a las 08:00</span>
+</div>
 
-  <section class="filters">
-    <div class="search-row">
-      <input type="search" id="q" placeholder="Buscar en el registro" aria-label="Buscar sesiones">
-      <span class="search-hint" id="hint">Pulsa / para buscar</span>
-    </div>
-
-    <div class="chipset">
-      <span class="chipset-label">Tipo de sesión</span>
-      <div class="chips" id="chips-tipo"></div>
-    </div>
-
-    <button class="more-toggle" id="more-toggle" aria-expanded="false">+ Más filtros</button>
-
-    <div class="extra-filters" id="extra" hidden>
-      <div class="chipset" style="margin-top:22px;">
-        <span class="chipset-label">Elementos y estaciones</span>
-        <div class="chips" id="chips-tag"></div>
-      </div>
-      <div class="chipset">
-        <span class="chipset-label">Estado de recuperación</span>
-        <div class="chips" id="chips-umbral">
-          <button class="chip" data-umbral="over" aria-pressed="false">Sobre umbral</button>
-          <button class="chip" data-umbral="under" aria-pressed="false">Bajo umbral</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="result-row">
-      <span class="cap" id="result-count">—</span>
-      <button class="clear-btn" id="clear" hidden>Limpiar filtros</button>
-    </div>
-  </section>
-
-  <section id="log"></section>
-  <button class="load-more" id="load-more" hidden>Mostrar más</button>
-
-  <footer>
-    <span class="cap">WHOOP v2 — sincroniza 08:00 UTC</span>
-    <span class="cap">
-      <a href="analisis.html">Análisis</a>
-      &nbsp;&nbsp;
-      <a href="admin.html">Añadir entrada</a>
-    </span>
-  </footer>
+<div class="menu" id="menu" data-open="0" role="dialog" aria-label="Menú">
+  <div class="mh">
+    <span class="wm">Umbral<sup>&reg;</sup></span>
+    <button class="burger" id="burger2" style="display:flex" aria-label="Cerrar"><i></i></button>
+  </div>
+  <ol id="mlist"></ol>
+</div>
 
 <script>
-const RACE_DATE = '2026-12-12';
-const THRESHOLD = 67;
-const DASH = '\u2014';
-const PAGE = 40;
+/* ===================================================================
+   UMBRAL · motor de dibujo
+   Una sola codificación a dos escalas.
+     glifo  → la sesión (día)
+     hilo   → la semana y el bloque
+   =================================================================== */
+const NS = 'http://www.w3.org/2000/svg';
 
-const $ = id => document.getElementById(id);
+/* tintes de disciplina */
+const TINTE = {
+  'Crossfit':'#A8443A', 'Hyrox':'#2E4057', 'Carrera':'#C89A3C',
+  'Gimnásticos':'#6B7F63', 'Fuerza':'#55534E', 'Movilidad':'#6B7F63',
+  'Caminar':'#B9B49C', 'Bici':'#2E4057', 'Remo':'#2E4057',
+  'Natación':'#2E4057', 'Descanso':'#DCD3C0',
+};
+const tinte = d => TINTE[d] || '#8A8578';
 
-let DAYS = [];
-let shown = PAGE;
-const state = { q: '', tipo: new Set(), tags: new Set(), umbral: null };
+/* rampa de zonas: del crudo al granza */
+const ZONA = ['#DCD3C0','#B9B49C','#6B7F63','#C89A3C','#A8443A','#6B2A24'];
 
-/* ---------- utils ---------- */
-const norm = s => (s || '').toString().toLowerCase()
-  .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+function el(n, a){ const x=document.createElementNS(NS,n);
+  for(const k in a) x.setAttribute(k,a[k]); return x; }
 
-function fmtStamp(iso){
-  const d = new Date(iso + 'T00:00:00');
-  return {
-    day: d.toLocaleDateString('es-ES', { day:'2-digit', month:'short' }).replace('.', ''),
-    wd:  d.toLocaleDateString('es-ES', { weekday:'long' }),
-  };
-}
+/* ---------- el glifo: una sesión ----------
+   radio  = duración
+   arcos  = reparto por zonas de pulso
+   tinte  = disciplina (relleno interior)
+   punto  = WOD benchmark
+   halo   = esfuerzo percibido alto                                   */
+function glifo(s, {vb=100, r0=17, r1=26, grosor=5.2} = {}){
+  const svg = el('svg',{viewBox:`0 0 ${vb} ${vb}`,class:'gl'});
+  const cx=vb/2, cy=vb/2;
+  const min = s.min ?? 0;
+  const R = r0 + Math.min(min,90)/90*r1;
+  const z = Array.isArray(s.zonas) ? s.zonas : null;
+  const tot = z ? z.reduce((a,b)=>a+b,0) : 0;
 
-function esc(s){
-  return (s || '').replace(/[&<>"']/g, c =>
-    ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
-}
-
-function highlight(text, q){
-  const safe = esc(text);
-  if (!q) return safe;
-  const nText = norm(safe), nQ = norm(q);
-  let out = '', i = 0;
-  while (true){
-    const at = nText.indexOf(nQ, i);
-    if (at === -1){ out += safe.slice(i); break; }
-    out += safe.slice(i, at) + '<mark>' + safe.slice(at, at + q.length) + '</mark>';
-    i = at + q.length;
+  /* relleno: la disciplina, y más denso si cruzó el umbral */
+  if(s.disc){
+    svg.appendChild(el('circle',{cx,cy,r:Math.max(R-grosor/2-1,2),
+      fill:tinte(s.disc), opacity: s.over ? .22 : .085}));
   }
+
+  /* arcos de zona */
+  if(z && tot>0){
+    let a=-Math.PI/2;
+    z.forEach((v,i)=>{
+      if(!v) return;
+      const a2=a+(v/tot)*Math.PI*2;
+      const x1=cx+Math.cos(a)*R,  y1=cy+Math.sin(a)*R;
+      const x2=cx+Math.cos(a2)*R, y2=cy+Math.sin(a2)*R;
+      svg.appendChild(el('path',{
+        d:`M ${x1.toFixed(2)} ${y1.toFixed(2)} A ${R} ${R} 0 ${(a2-a)>Math.PI?1:0} 1 ${x2.toFixed(2)} ${y2.toFixed(2)}`,
+        fill:'none', stroke:ZONA[i]||ZONA[0], 'stroke-width':grosor}));
+      a=a2;
+    });
+  } else if(min>0){
+    /* sesión sin zonas: anillo del color de la disciplina */
+    svg.appendChild(el('circle',{cx,cy,r:R,fill:'none',
+      stroke:tinte(s.disc),'stroke-width':grosor}));
+  } else {
+    /* descanso o día sin sesión: un hilo suelto */
+    svg.appendChild(el('line',{x1:cx-R*0.5,y1:cy,x2:cx+R*0.5,y2:cy,
+      stroke:'#DCD3C0','stroke-width':Math.max(grosor*0.4,1.4),
+      'stroke-dasharray':'2 3'}));
+  }
+
+  if(s.wod) svg.appendChild(el('circle',{cx,cy,r:grosor*0.72,fill:'#25231F'}));
+
+  if((s.rpe||0) >= 8)
+    svg.appendChild(el('circle',{cx,cy,r:R+grosor*1.35,fill:'none',
+      stroke:'#25231F','stroke-width':.9,'stroke-dasharray':'2 4'}));
+
+  return svg;
+}
+
+/* ---------- el hilo: una semana ----------
+   Es el glifo estirado: el radio pasa a grosor, el relleno a altura. */
+function hilo(dias, {W=760, H=120, pad=14, thr=67} = {}){
+  const svg = el('svg',{viewBox:`0 0 ${W} ${H}`,class:'gl'});
+  const n = Math.max(dias.length,1);
+  const paso = (W-pad*2)/n;
+  const conDato = dias.filter(d=>d.rec!=null);
+  const Y = r => H-pad-((r-25)/(95-25))*(H-pad*2);
+
+  /* urdimbre */
+  for(let i=0;i<=n*3;i++){
+    const x = pad+(i/(n*3))*(W-pad*2);
+    svg.appendChild(el('line',{x1:x,x2:x,y1:pad-4,y2:H-pad+4,
+      stroke:'#DCD3C0','stroke-width':.7}));
+  }
+  /* borde de tejido */
+  svg.appendChild(el('line',{x1:4,x2:W-4,y1:Y(thr),y2:Y(thr),
+    stroke:'#25231F','stroke-width':1}));
+
+  if(!conDato.length) return svg;
+
+  dias.forEach((d,i)=>{
+    if(d.rec==null) return;
+    const x1=pad+i*paso, x2=x1+paso, y=Y(d.rec);
+    const prev = i>0 ? dias[i-1] : null, next = i<n-1 ? dias[i+1] : null;
+    const yP = prev && prev.rec!=null ? Y(prev.rec) : y;
+    const yN = next && next.rec!=null ? Y(next.rec) : y;
+    const g  = d.min ? 2+Math.min(d.min,90)/90*6 : 1.5;
+    const p = el('path',{
+      d:`M ${x1.toFixed(1)} ${((yP+y)/2).toFixed(1)} C ${(x1+paso*.25).toFixed(1)} ${y.toFixed(1)}, ${(x2-paso*.25).toFixed(1)} ${y.toFixed(1)}, ${x2.toFixed(1)} ${((y+yN)/2).toFixed(1)}`,
+      fill:'none', stroke:tinte(d.disc), 'stroke-width':g, 'stroke-linecap':'round'});
+    if(!d.min) p.setAttribute('stroke-dasharray','1.6 4');
+    else if(d.rec<thr) p.setAttribute('stroke-dasharray','8 2.4');
+    svg.appendChild(p);
+
+    if(d.rec>=thr && d.min){
+      svg.appendChild(el('circle',{cx:(x1+x2)/2,cy:y,
+        r:d.wod?4:2.6, fill:d.wod?'#25231F':tinte(d.disc)}));
+    }
+  });
+  return svg;
+}
+
+/* ---------- la tela: el bloque ----------
+   Semanas apiladas. La separación de la urdimbre es la tensión del tejido. */
+function tela(dias, {W=1140, H=320, pad=20, thr=67, tension=null} = {}){
+  const svg = el('svg',{viewBox:`0 0 ${W} ${H}`,class:'gl'});
+  const SEM = Math.max(Math.ceil(dias.length/7),1);
+  const alto = (H-pad*2)/SEM, ancho = (W-pad*2)/7;
+  const pos = (rec,s) => pad + s*alto + alto*(1-(rec-25)/70)*.76 + alto*.12;
+
+  for(let s=0;s<SEM;s++){
+    const t = tension ? tension(s) : 1;
+    const n = Math.round(7 + Math.max(0,(t-0.85))*24);
+    const alta = t > 1.3;
+    for(let c=0;c<=n;c++){
+      const x = pad+(c/n)*(W-pad*2);
+      svg.appendChild(el('line',{x1:x,x2:x,
+        y1:pad+s*alto, y2:pad+(s+1)*alto,
+        stroke: alta?'#A8443A':'#DCD3C0',
+        'stroke-width': alta?.9:.7, opacity: alta?.5:1}));
+    }
+  }
+
+  dias.forEach((d,i)=>{
+    if(d.rec==null) return;
+    const s=Math.floor(i/7), c=i%7;
+    const x1=pad+c*ancho, x2=x1+ancho, y=pos(d.rec,s);
+    const prev = c>0 ? dias[i-1] : null, next = c<6 ? dias[i+1] : null;
+    const yP = prev && prev.rec!=null ? pos(prev.rec,s) : y;
+    const yN = next && next.rec!=null ? pos(next.rec,s) : y;
+    const p = el('path',{
+      d:`M ${x1.toFixed(1)} ${((yP+y)/2).toFixed(1)} C ${(x1+ancho*.25).toFixed(1)} ${y.toFixed(1)}, ${(x2-ancho*.25).toFixed(1)} ${y.toFixed(1)}, ${x2.toFixed(1)} ${((y+yN)/2).toFixed(1)}`,
+      fill:'none', stroke:tinte(d.disc),
+      'stroke-width': d.min? 1.3+Math.min(d.min,90)/90*3.4 : 1,
+      'stroke-linecap':'round'});
+    if(!d.min) p.setAttribute('stroke-dasharray','1.3 3.2');
+    else if(d.rec<thr) p.setAttribute('stroke-dasharray','6 2');
+    svg.appendChild(p);
+    if(d.rec>=thr && d.min)
+      svg.appendChild(el('circle',{cx:(x1+x2)/2,cy:y,r:1.7,fill:tinte(d.disc)}));
+  });
+
+  for(let s=0;s<SEM;s++){
+    const y=pos(thr,s);
+    svg.appendChild(el('line',{x1:pad-8,x2:W-pad+8,y1:y,y2:y,
+      stroke:'#25231F','stroke-width':.8,opacity:.8}));
+  }
+  return svg;
+}
+
+</script>
+<script>
+/* ===================================================================
+   UMBRAL · aplicación
+   data/index.json   lo escribe el sync de WHOOP cada mañana
+   data/planes.json  lo escribe el editor de esta misma app
+   =================================================================== */
+const CFG = {
+  RACE:'2026-12-12', THR:67,
+  INICIO_BLOQUE:'2026-06-22', SEMANAS_BLOQUE:8,
+  Z2_OBJETIVO:50,
+};
+const THR = CFG.THR, DASH='—';
+const $ = id => document.getElementById(id);
+const esc = s => (s??'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nn = n => String(n).padStart(2,'0');
+const media = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : null;
+const r1 = v => v==null||Number.isNaN(v) ? null : Math.round(v*10)/10;
+const hoyISO = () => new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const HOY = hoyISO();
+const D = iso => new Date(iso+'T00:00:00');
+const fd = (iso,o) => D(iso).toLocaleDateString('es-ES',o||{day:'2-digit',month:'short'}).replace('.','');
+const addD = (iso,n) => { const d=D(iso); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); };
+const lunesDe = iso => { const d=D(iso); d.setDate(d.getDate()-((d.getDay()+6)%7)); return d.toISOString().slice(0,10); };
+
+let DIAS=[], PLANES=[], S=[], porFecha=new Map();
+
+const WODS={
+  'Fran':'21-15-9 Thrusters · Dominadas',
+  'Barbara Ann':'5 rondas · 20 flexiones de pino, 30 pesos muertos, 40 abdominales, 100 saltos',
+  'Nicole':"AMRAP 20' · 400 m carrera + máx dominadas",
+  'Cindy':"AMRAP 20' · 5 dominadas, 10 flexiones, 15 sentadillas",
+  'Helen':'3 rondas · 400 m carrera, 21 KB swings, 12 dominadas',
+  'Diane':'21-15-9 Peso muerto · Flexiones de pino',
+  'Murph':'1,6 km, 100 dominadas, 200 flexiones, 300 sentadillas, 1,6 km',
+  'Grace':'30 cargadas y envión',
+};
+const DISCIPLINAS=['Crossfit','Gimnásticos','Hyrox','Carrera','Fuerza','Descanso'];
+
+/* ---------- carga ---------- */
+async function cargar(){
+  const j = async p => { try{ const r=await fetch(p,{cache:'no-store'}); return r.ok?await r.json():null; }catch(e){ return null; } };
+  DIAS = (await j('data/index.json')) || [];
+  PLANES = (await j('data/planes.json')) || [];
+  if(!DIAS.length){
+    const m = await j('data/manifest.json');
+    if(Array.isArray(m)){
+      const res = await Promise.all(m.map(x=>j(`data/${x}.json`)));
+      DIAS = res.filter(Boolean);
+    }
+  }
+  DIAS = DIAS.filter(d=>d&&d.date).sort((a,b)=>a.date.localeCompare(b.date));
+  porFecha = new Map(DIAS.map(d=>[d.date,d]));
+  construir();
+}
+
+function discDe(w){
+  if(!w) return null;
+  const s=(w.sport_name||'').toLowerCase();
+  if(s.includes('running')) return 'Carrera';
+  if(s.includes('walking')||s.includes('hiking')) return 'Caminar';
+  if(s.includes('weightlifting')||s.includes('strength')) return 'Fuerza';
+  if(s.includes('functional')) return 'Crossfit';
+  if(s.includes('hiit')) return 'Hyrox';
+  if(s.includes('yoga')||s.includes('pilates')) return 'Movilidad';
+  if(s.includes('cycling')||s.includes('bik')) return 'Bici';
+  if(s.includes('rowing')) return 'Remo';
+  if(s.includes('swim')) return 'Natación';
+  return w.sport_name||null;
+}
+function zonasDe(ws){
+  const t=[0,0,0,0,0,0]; let hay=false;
+  (ws||[]).forEach(w=>{ if(Array.isArray(w.zones)){hay=true; w.zones.forEach((m,i)=>t[i]+=m);} });
+  return hay?t:null;
+}
+
+/* une plan y ejecución en una sola sesión */
+function construir(){
+  const plan=new Map();
+  PLANES.forEach(p=>Object.entries(p.dias||{}).forEach(([iso,e])=>{ if(e) plan.set(iso,e); }));
+  const fechas=new Set([...plan.keys(), ...DIAS.filter(d=>(d.workouts||[]).length).map(d=>d.date)]);
+  S=[...fechas].map(iso=>{
+    const pl=plan.get(iso)||{}, d=porFecha.get(iso)||{}, ws=d.workouts||[];
+    const min=ws.reduce((s,w)=>s+(w.duration_min||0),0);
+    const cats=[];
+    if(pl.zona_objetivo) cats.push('Z'+pl.zona_objetivo);
+    if(pl.wod) cats.push('Benchmark');
+    if(pl.rpe) cats.push('RPE '+pl.rpe);
+    if(min) cats.push(min+' min');
+    return {
+      fecha:iso,
+      titulo: pl.titulo || ws.map(w=>w.sport_name).filter(Boolean).join(' + ') || 'Sesión',
+      disc: pl.disciplina || discDe(ws[0]) || null,
+      cats, desc:pl.descripcion||'', metricas:pl.metricas||'', sensaciones:pl.sensaciones||'',
+      wod:pl.wod||null, resultado:pl.resultado||null, rpe:pl.rpe||null,
+      zonaObj:pl.zona_objetivo||null,
+      rec:d.recovery_score??null, hrv:d.hrv_rmssd_milli??null,
+      strain:d.day_strain??null, sueno:d.sleep_performance_percentage??null,
+      min, zonas:zonasDe(ws), workouts:ws, hecho:ws.length>0,
+    };
+  }).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+}
+
+/* día para dibujo (glifo/hilo) */
+function paraDibujo(iso){
+  const s=S.find(x=>x.fecha===iso), d=porFecha.get(iso);
+  return { rec:d?.recovery_score??null, min:s?.min??0, disc:s?.disc||'Descanso',
+           zonas:s?.zonas||null, wod:!!s?.wod, rpe:s?.rpe||0,
+           over:(d?.recovery_score??0)>=THR };
+}
+function rango(desde,hasta){
+  const out=[]; let c=desde;
+  while(c<=hasta){ out.push(paraDibujo(c)); c=addD(c,1); }
   return out;
 }
 
-/* Training blocks, from the performance plan */
-function bloqueOf(dateStr){
-  const d = new Date(dateStr + 'T00:00:00');
-  if (d < new Date('2026-08-24')) return 'Bloque 1';
-  if (d < new Date('2026-09-21')) return 'Bloque 2';
-  return 'Bloque 3';
+/* tensión del tejido: carga aguda 7 d contra carga de fondo 28 d */
+function cargaDe(iso){ const d=porFecha.get(iso); return d?.day_strain ?? 0; }
+function tensionEn(iso){
+  const ag=[], cr=[];
+  for(let i=0;i<7;i++)  ag.push(cargaDe(addD(iso,-i)));
+  for(let i=0;i<28;i++) cr.push(cargaDe(addD(iso,-i)));
+  const c=media(cr.filter(x=>x>0)), a=media(ag.filter(x=>x>0));
+  return (c&&a)? a/c : null;
 }
 
-/* Session type inferred from WHOOP when not set by hand */
-function tipoOf(day){
-  if (day.tipo) return day.tipo;
-  const w = (day.workouts || [])[0];
-  if (!w) return null;
-  const s = norm(w.sport_name);
-  if (s.includes('running')) return 'Carrera';
-  if (s.includes('weightlifting')) return 'Fuerza';
-  if (s.includes('functional')) return 'Estaciones';
-  if (s.includes('hiit')) return 'Híbrido';
-  if (s.includes('yoga') || s.includes('pilates')) return 'Movilidad';
-  return w.sport_name || null;
+/* ---------- piezas ---------- */
+function pan(titulo,extra,cuerpo,flush){
+  return `<section class="pan"><hgroup><h2>${esc(titulo)}</h2>${extra?`<span class="m">${esc(extra)}</span>`:''}</hgroup>
+    <div class="in ${flush?'flush':''}">${cuerpo}</div></section>`;
 }
+function vacio(t,s){ return `<div class="vac"><b>${esc(t)}</b>${esc(s||'')}</div>`; }
 
-function tagsOf(day){ return Array.isArray(day.etiquetas) ? day.etiquetas : []; }
-
-/* ---------- filtering ---------- */
-function matches(day){
-  if (state.tipo.size){
-    const t = tipoOf(day);
-    if (!t || !state.tipo.has(t)) return false;
-  }
-  if (state.tags.size){
-    const tg = tagsOf(day);
-    for (const want of state.tags) if (!tg.includes(want)) return false;
-  }
-  if (state.umbral){
-    const r = day.recovery_score;
-    if (r === null || r === undefined) return false;
-    if (state.umbral === 'over' && r < THRESHOLD) return false;
-    if (state.umbral === 'under' && r >= THRESHOLD) return false;
-  }
-  if (state.q){
-    const hay = norm([
-      day.notes,
-      (day.workouts || []).map(w => w.sport_name).join(' '),
-      tagsOf(day).join(' '),
-      tipoOf(day),
-      day.date,
-    ].join(' '));
-    if (!hay.includes(norm(state.q))) return false;
-  }
-  return true;
-}
-
-const isFiltered = () =>
-  state.q || state.tipo.size || state.tags.size || state.umbral;
-
-/* ---------- render ---------- */
-function readingCell(k, v, unit, under){
-  return `<div class="reading${under ? ' under' : ''}">
-    <span class="k cap">${k}</span>
-    <span class="v">${v ?? DASH}${unit ? `<u>${unit}</u>` : ''}</span>
+function indice({cols,gc,items,vac}){
+  if(!items.length) return vac||vacio('Nada todavía');
+  return `<div class="idx">
+    <div class="cols ${gc}">
+      ${cols.map((c,i)=>i===cols.length-1
+        ? `<span class="tl"><span class="m">${c}</span>
+           <button class="m" data-all="1">Abrir</button><button class="m" data-all="0">Cerrar</button></span>`
+        : `<span class="m">${c}</span>`).join('')}
+    </div>
+    ${items.map((it,i)=>`<div class="it" data-open="0" data-iso="${esc(it.iso||'')}">
+      <button class="ln ${gc}">
+        <span class="g" data-glifo='${JSON.stringify(it.glifo||{})}'></span>
+        <span class="t">${it.t}</span>
+        ${(it.subs||[]).map(s=>`<span class="s">${s}</span>`).join('')}
+        <span class="e ${it.on?'on':''}">${it.e??''}</span></button>
+      <div class="bd">${it.body||''}</div></div>`).join('')}
   </div>`;
 }
-
-function renderReadings(day){
-  if (!day){
-    $('readings').innerHTML =
-      readingCell('Recuperación', null, '%', true) + readingCell('VFC', null, 'ms', true) +
-      readingCell('Sueño', null, '%', true) + readingCell('Carga', null, '', true);
-    return;
-  }
-  const under = (day.recovery_score ?? 0) < THRESHOLD;
-  $('readings').innerHTML =
-    readingCell('Recuperación', day.recovery_score, '%', under) +
-    readingCell('VFC', day.hrv_rmssd_milli, 'ms', false) +
-    readingCell('Sueño', day.sleep_performance_percentage, '%', false) +
-    readingCell('Carga', day.day_strain, '', false);
-}
-
-function renderChart(matchedDates){
-  const chart = $('chart');
-  const line = chart.querySelector('.threshold-line');
-  const axis = chart.querySelector('.chart-axis');
-  const slice = DAYS.slice(0, 30).reverse();
-  const filtering = isFiltered();
-
-  chart.querySelectorAll('.tick').forEach(t => t.remove());
-
-  if (!slice.length){
-    const frag = document.createDocumentFragment();
-    for (let i = 0; i < 30; i++){
-      const t = document.createElement('div');
-      t.className = 'tick'; t.style.height = '2px';
-      frag.appendChild(t);
-    }
-    chart.insertBefore(frag, axis);
-    $('over-count').textContent = DASH;
-    return;
-  }
-
-  let over = 0;
-  const frag = document.createDocumentFragment();
-  slice.forEach(d => {
-    const score = d.recovery_score;
-    const t = document.createElement('div');
-    t.className = 'tick';
-    if (score === null || score === undefined){
-      t.style.height = '2px';
-    } else {
-      if (score >= THRESHOLD){ over++; t.classList.add('over'); }
-      t.style.height = Math.max(120 * score / 100, 2) + 'px';
-      t.title = `${d.date} — ${score}%`;
-      if (filtering && !matchedDates.has(d.date)){
-        t.classList.remove('over');
-        t.classList.add('dim');
-      }
-      t.addEventListener('click', () => {
-        $('q').value = d.date;
-        state.q = d.date;
-        apply();
-      });
-    }
-    frag.appendChild(t);
+function pintarGlifos(){
+  document.querySelectorAll('[data-glifo]').forEach(n=>{
+    if(n.dataset.hecho) return;
+    let g={}; try{ g=JSON.parse(n.dataset.glifo); }catch(e){}
+    n.innerHTML=''; n.appendChild(glifo(g,{r0:15,r1:22,grosor:6}));
+    n.dataset.hecho='1';
   });
-  chart.insertBefore(frag, axis);
-
-  $('over-count').textContent = `${over} de ${slice.length} sobre umbral`;
-  $('axis-from').textContent = fmtStamp(slice[0].date).day;
-  $('axis-to').textContent = fmtStamp(slice[slice.length - 1].date).day;
+}
+function conectar(){
+  document.querySelectorAll('.it>.ln').forEach(b=>b.onclick=()=>{
+    const it=b.parentElement; it.dataset.open = it.dataset.open==='1'?'0':'1'; });
+  document.querySelectorAll('[data-all]').forEach(b=>b.onclick=e=>{ e.stopPropagation();
+    b.closest('.idx').querySelectorAll('.it').forEach(i=>i.dataset.open=b.dataset.all); });
+  pintarGlifos();
 }
 
-function entryHTML(d){
-  const { day, wd } = fmtStamp(d.date);
-  const tipo = tipoOf(d);
-  const tags = tagsOf(d);
-
-  const sessions = (d.workouts || []).map(w =>
-    `${esc(w.sport_name || 'Sesión')} — ${w.duration_min ?? DASH} min — carga ${w.strain ?? DASH}`
-  ).join('<br>');
-
-  const chips = [
-    tipo ? `<button class="tag tipo" data-tipo="${esc(tipo)}">${esc(tipo)}</button>` : '',
-    ...tags.map(t => `<button class="tag" data-tag="${esc(t)}">${esc(t)}</button>`),
-  ].filter(Boolean).join('');
-
-  const plates = (d.photos || [])
-    .map(src => `<img src="${esc(src)}" alt="Sesión del ${d.date}" loading="lazy">`).join('');
-
-  const note = d.notes && d.notes.trim()
-    ? `<p class="note">${highlight(d.notes, state.q)}</p>`
-    : `<p class="note void">Sin anotación</p>`;
-
-  return `<article class="entry">
-    <div class="stamp">${day}<em>${wd}</em><span class="blk">${bloqueOf(d.date)}</span></div>
-    <div class="col-main">
-      <div class="vitals">
-        <span>Rec <i>${d.recovery_score ?? DASH}</i></span>
-        <span>VFC <i>${d.hrv_rmssd_milli ?? DASH}</i></span>
-        <span>FC <i>${d.resting_heart_rate ?? DASH}</i></span>
-        <span>Carga <i>${d.day_strain ?? DASH}</i></span>
-      </div>
-      ${sessions ? `<div class="session">${sessions}</div>` : ''}
-      ${chips ? `<div class="tags">${chips}</div>` : ''}
-      ${note}
+function ficha(s){
+  const g=JSON.stringify({rec:s.rec,min:s.min,disc:s.disc,zonas:s.zonas,
+    wod:!!s.wod,rpe:s.rpe,over:(s.rec??0)>=THR});
+  const z=s.zonas, tz=z?z.reduce((a,b)=>a+b,0):0;
+  const w=(s.workouts||[])[0];
+  return `<div class="det">
+    <span class="gbig" data-glifo='${g}'></span>
+    <div>
+      ${s.desc?`<span class="k m">Descripción</span><p>${esc(s.desc)}</p>`:''}
+      ${s.metricas?`<span class="k m">Métricas</span><p>${esc(s.metricas)}</p>`:''}
+      ${s.sensaciones?`<span class="k m">Sensaciones</span><p class="gr">${esc(s.sensaciones)}</p>`:''}
+      ${!s.desc&&!s.metricas&&!s.sensaciones?'<p class="gr">Sin anotación.</p>':''}
+      ${z&&tz?`<span class="k m">Zonas</span><p class="gr">${z.map((m,i)=>m>0?`Z${i} ${Math.round(m/tz*100)} %`:'').filter(Boolean).join(' · ')}</p>`:''}
     </div>
-    <div class="plates">${plates}</div>
-  </article>`;
+    <div><table class="spec">
+      <tr><td>Recuperación</td><td>${s.rec??DASH} %</td></tr>
+      <tr><td>Variabilidad</td><td>${s.hrv??DASH} ms</td></tr>
+      <tr><td>Sueño</td><td>${s.sueno??DASH} %</td></tr>
+      <tr><td>Carga</td><td>${s.strain??DASH}</td></tr>
+      ${s.zonaObj?`<tr><td>Zona objetivo</td><td>Z${s.zonaObj}</td></tr>`:''}
+      ${s.rpe?`<tr><td>Esfuerzo</td><td>RPE ${s.rpe}</td></tr>`:''}
+      ${w?`<tr><td>${esc(w.sport_name||'Sesión')}</td><td>${w.duration_min??DASH} min</td></tr>`:''}
+      ${w&&w.average_heart_rate?`<tr><td>FC media / máx</td><td>${w.average_heart_rate} / ${w.max_heart_rate??DASH}</td></tr>`:''}
+      ${w&&w.distance_meter?`<tr><td>Distancia</td><td>${(w.distance_meter/1000).toFixed(2)} km</td></tr>`:''}
+      ${s.resultado?`<tr><td>Resultado</td><td>${esc(s.resultado.texto)}</td></tr>`:''}
+    </table></div></div>`;
 }
 
-function buildChips(){
-  const tipoCounts = new Map(), tagCounts = new Map();
-  for (const d of DAYS){
-    const t = tipoOf(d);
-    if (t) tipoCounts.set(t, (tipoCounts.get(t) || 0) + 1);
-    for (const tag of tagsOf(d)) tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1);
-  }
-  const render = (el, counts, attr) => {
-    const sorted = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-    el.innerHTML = sorted.map(([name, n]) =>
-      `<button class="chip" data-${attr}="${esc(name)}" aria-pressed="false">${esc(name)}<span class="n">${n}</span></button>`
-    ).join('') || `<span class="cap" style="color:var(--pale)">Sin datos todavía</span>`;
-  };
-  render($('chips-tipo'), tipoCounts, 'tipo');
-  render($('chips-tag'), tagCounts, 'tag');
+/* ---------- ubicación ---------- */
+function ubic(){
+  const hoy=D(HOY), dia=(hoy.getDay()+6)%7;
+  const lunes=D(lunesDe(HOY));
+  const sem=Math.max(1,Math.min(CFG.SEMANAS_BLOQUE,
+    Math.floor((lunes-D(CFG.INICIO_BLOQUE))/6048e5)+1));
+  const faltan=Math.max(0,Math.ceil((new Date(CFG.RACE)-hoy)/864e5));
+  return {dia,sem,faltan};
 }
 
-function syncChipStates(){
-  document.querySelectorAll('[data-tipo]').forEach(b => {
-    if (b.classList.contains('chip'))
-      b.setAttribute('aria-pressed', state.tipo.has(b.dataset.tipo));
+/* ================= A · ESTADO ================= */
+function vEstado(){
+  const d=porFecha.get(HOY)||DIAS[DIAS.length-1]||{};
+  const s=S.find(x=>x.fecha===HOY);
+  const rec=d.recovery_score??null;
+  const over=(rec??0)>=THR;
+  const mano = rec==null?'sin lectura hoy' : over?'tejido cerrado, buen día'
+             : rec>=34?'tejido abierto, con cabeza':'hoy hilo suelto';
+  const u=ubic();
+
+  /* últimas cuatro semanas de tela */
+  const desde=addD(lunesDe(HOY),-21);
+  const trozo=rango(desde,addD(lunesDe(HOY),6));
+  const conRec=trozo.filter(x=>x.rec!=null);
+  const sobre=conRec.filter(x=>x.rec>=THR).length;
+  const t=tensionEn(HOY);
+
+  /* composición por zonas de la semana */
+  const semDias=rango(lunesDe(HOY),addD(lunesDe(HOY),6));
+  const zt=[0,0,0,0,0,0]; let hayZ=false;
+  semDias.forEach(x=>{ if(x.zonas){hayZ=true; x.zonas.forEach((m,i)=>zt[i]+=m);} });
+  const zs=zt.reduce((a,b)=>a+b,0);
+  const pc=i=>zs?Math.round(zt[i]/zs*100):0;
+
+  let sig=null;
+  for(let i=1;i<=14;i++){ const m=S.find(x=>x.fecha===addD(HOY,i)); if(m){sig=m;break;} }
+
+  $('main').innerHTML =
+  pan('Estado', fd(HOY,{weekday:'long',day:'numeric',month:'long'}),
+   `<div class="est">
+      <div>
+        <span class="m">${rec==null?'Sin lectura de WHOOP hoy':(over?'Por encima del borde de tejido':'Por debajo del borde de tejido')} · umbral ${THR}</span>
+        <div class="cifra" style="margin-top:10px">${rec??DASH}<u>%</u><span class="an">${mano}</span></div>
+        <p class="txt">${conRec.length
+          ? `En las últimas cuatro semanas, ${sobre} de ${conRec.length} hilos pasan por encima del borde. Un tejido abierto no es un fallo: es otra densidad.`
+          : 'Todavía no hay lecturas suficientes. La tela se irá formando con cada sincronización.'}</p>
+        <div class="otros">
+          <span><span class="k m">Variabilidad</span><span class="v">${d.hrv_rmssd_milli??DASH}<u>ms</u></span></span>
+          <span><span class="k m">Sueño</span><span class="v">${d.sleep_performance_percentage??DASH}<u>%</u></span></span>
+          <span><span class="k m">Carga</span><span class="v">${d.day_strain??DASH}</span></span>
+          <span><span class="k m">Tensión</span><span class="v">${t?t.toFixed(2):DASH}</span></span>
+        </div>
+      </div>
+      <div class="etq">
+        <div class="marca">Semana ${u.sem} · Bloque 1</div>
+        <div class="sub m">${fd(lunesDe(HOY))} – ${fd(addD(lunesDe(HOY),6))}</div>
+        <table>
+          <tr><td>Zona 2</td><td>${hayZ?pc(2)+' %':DASH}</td></tr>
+          <tr><td>Zona 3</td><td>${hayZ?pc(3)+' %':DASH}</td></tr>
+          <tr><td>Zona 4 – 5</td><td>${hayZ?(pc(4)+pc(5))+' %':DASH}</td></tr>
+          <tr><td>Densidad</td><td>${conRec.length? (sobre/conRec.length>=.45?'media':'abierta') : DASH}</td></tr>
+        </table>
+        <div class="cui"><span class="m">Ubicación</span>
+          <p>Día ${u.dia+1} de 7 · semana ${u.sem} de ${CFG.SEMANAS_BLOQUE} · faltan ${u.faltan} días para Hyrox.</p></div>
+      </div>
+    </div>`)
+  + pan('Las últimas cuatro semanas','La línea es el borde de tejido',
+      `<div class="tela" id="telaCorta"></div>`, true)
+  + pan('Sesión de hoy', s?(s.disc||''):'',
+     s ? `<div style="display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap">
+            <span class="gbig" style="width:96px;height:96px;flex-shrink:0"
+              data-glifo='${JSON.stringify({rec:s.rec,min:s.min,disc:s.disc,zonas:s.zonas,wod:!!s.wod,rpe:s.rpe,over})}'></span>
+            <div style="flex:1;min-width:220px">
+              <div style="font-size:22px;font-style:italic;margin-bottom:6px">${esc(s.titulo)}</div>
+              ${s.desc?`<p class="gr" style="max-width:52ch;margin-bottom:14px">${esc(s.desc)}</p>`:''}
+              ${s.zonaObj?`<div class="ctr"><div class="grp"><span class="m">Zona objetivo</span>
+                <div class="pick">${[1,2,3,4,5].map(z=>`<button aria-pressed="${z===s.zonaObj}" disabled>${z}</button>`).join('')}</div>
+              </div></div>`:''}
+            </div>
+          </div>`
+       : vacio('Sin sesión planificada para hoy','Planifícala en la pestaña Plan.'))
+  + (sig ? pan('Siguiente', fd(sig.fecha,{weekday:'long',day:'2-digit',month:'short'}),
+      `<div style="display:flex;gap:14px;align-items:baseline;flex-wrap:wrap">
+        <span style="font-size:18px">→</span>
+        <span style="font-size:20px;font-style:italic">${esc(sig.titulo)}</span>
+        <span class="m">${esc(sig.disc||'')}${sig.zonaObj?' · zona '+sig.zonaObj:''}</span>
+      </div>`) : '');
+
+  const tc=$('telaCorta');
+  if(tc) tc.appendChild(tela(trozo,{W:1140,H:150,pad:14,thr:THR,
+    tension:s2=>tensionEn(addD(desde,s2*7+3))||1}));
+  pintarGlifos();
+}
+
+/* ================= B · SEMANA ================= */
+let semAct=null;
+function vSemana(){
+  if(!semAct) semAct=lunesDe(HOY);
+  const dias=Array.from({length:7},(_,i)=>addD(semAct,i));
+  const wk=PLANES.find(p=>p.semana===semAct);
+  const sem=dias.map(iso=>({iso, s:S.find(x=>x.fecha===iso), d:porFecha.get(iso)}));
+  const hechas=sem.filter(x=>x.s&&x.s.hecho).length;
+  const plan=sem.filter(x=>x.s).length;
+
+  $('main').innerHTML = pan('Semana',`${fd(semAct)} – ${fd(addD(semAct,6))}`,
+    `<div class="ctr" style="padding:12px 16px;border-bottom:1px solid var(--hilo)">
+       <button class="op" id="wp">← Anterior</button>
+       <button class="op" id="wn">Siguiente →</button>
+       <button class="op" id="wh">Esta semana</button>
+       ${wk?.foco?`<span class="m" style="align-self:center">${esc(wk.foco)}</span>`:''}
+     </div>
+     <div class="tela" id="hiloSem" style="padding:14px 16px 4px"></div>
+     <div class="telapie"><span class="m">${hechas} de ${plan} sesiones hechas</span>
+       <span class="m">grosor = minutos · altura = recuperación</span></div>`
+    + indice({cols:['','Día','Sesión','Zona','Recup.','Estado'],gc:'c-sem',
+        vac:vacio('Semana sin planificar','Ve a Plan para escribirla.'),
+        items:sem.map(({iso,s,d})=>({
+          iso, glifo:paraDibujo(iso),
+          t:`<b>${fd(iso,{weekday:'short',day:'2-digit'})}</b>&nbsp; ${s?esc(s.titulo):'<span class="gr">Sin sesión</span>'}`,
+          subs:[ s?.disc?esc(s.disc):DASH,
+                 s?.zonaObj?'Obj Z'+s.zonaObj:DASH,
+                 d?.recovery_score!=null?d.recovery_score+' %':DASH ],
+          e: iso>HOY?'Pendiente':(s?.hecho?'Hecha':'No hecha'), on:!!s?.hecho,
+          body: s?ficha(s):'',
+        }))}), true);
+
+  const hs=$('hiloSem');
+  if(hs) hs.appendChild(hilo(dias.map(paraDibujo),{W:1100,H:120,thr:THR}));
+  conectar();
+  $('wp').onclick=()=>{semAct=addD(semAct,-7);vSemana();};
+  $('wn').onclick=()=>{semAct=addD(semAct,7);vSemana();};
+  $('wh').onclick=()=>{semAct=lunesDe(HOY);vSemana();};
+}
+
+/* ================= C · PLAN ================= */
+let planSem=null, sucio=false;
+function semanaObj(lunes){
+  let wk=PLANES.find(p=>p.semana===lunes);
+  if(!wk){ wk={semana:lunes,bloque:'Bloque 1',foco:'',dias:{}}; PLANES.push(wk);
+    PLANES.sort((a,b)=>b.semana.localeCompare(a.semana)); }
+  for(let i=0;i<7;i++){ const iso=addD(lunes,i); if(!wk.dias[iso]) wk.dias[iso]={}; }
+  return wk;
+}
+function plantillas(){
+  const m=new Map();
+  PLANES.forEach(p=>Object.values(p.dias||{}).forEach(e=>{
+    if(e&&e.titulo&&e.disciplina)
+      m.set(e.disciplina+' · '+e.titulo,{disciplina:e.disciplina,titulo:e.titulo,
+        descripcion:e.descripcion,zona_objetivo:e.zona_objetivo,wod:e.wod}); }));
+  return [...m.entries()].sort((a,b)=>a[0].localeCompare(b[0]));
+}
+function marcarSucio(){ sucio=true; const m=$('pmsg'); if(m) m.textContent='Sin guardar'; }
+
+function vPlan(){
+  if(!planSem) planSem=lunesDe(HOY);
+  const wk=semanaObj(planSem), tpl=plantillas();
+  const dias=Array.from({length:7},(_,i)=>addD(planSem,i));
+
+  $('main').innerHTML = pan('Plan',`${fd(planSem)} – ${fd(addD(planSem,6))}`,
+    `<div class="ctr" style="padding:12px 16px;border-bottom:1px solid var(--hilo)">
+       <button class="op" id="pp">← Anterior</button>
+       <button class="op" id="pn">Siguiente →</button>
+       <button class="op" id="pc">Copiar semana anterior</button>
+       <span class="m" style="align-self:center">${tpl.length} plantillas</span>
+     </div>`
+    + indice({cols:['','Día','Sesión','Disciplina','Estado'],gc:'c-plan',
+        items:dias.map(iso=>{
+          const e=wk.dias[iso]||{};
+          const lleno=!!(e.metricas||e.rpe||e.sensaciones||e.resultado);
+          return { iso, glifo:paraDibujo(iso),
+            t:`<b>${fd(iso,{weekday:'short',day:'2-digit'})}</b>&nbsp; ${e.titulo?esc(e.titulo):'<span class="gr">Sin planificar</span>'}`,
+            subs:[ e.disciplina?esc(e.disciplina):DASH ],
+            e: lleno?'Registrada':(e.titulo?'Planificada':'Vacía'), on:lleno,
+            body:`<div data-iso="${iso}" style="padding-top:12px">
+              <div class="ctr" style="margin-bottom:14px">
+                <div class="grp"><span class="m">Zona objetivo</span>
+                  <div class="pick" data-k="zona_objetivo">${[1,2,3,4,5].map(z=>
+                    `<button data-v="${z}" aria-pressed="${e.zona_objetivo==z}">${z}</button>`).join('')}</div></div>
+                <div class="grp"><span class="m">Disciplina</span>
+                  <div class="ops" data-k="disciplina">${DISCIPLINAS.map(x=>
+                    `<button class="op" data-v="${x}" aria-pressed="${e.disciplina===x}">${x}</button>`).join('')}</div></div>
+              </div>
+              ${tpl.length?`<div class="f"><span><label>Plantilla</label>
+                <select data-tpl><option value="">Usar una plantilla…</option>
+                ${tpl.map(([k])=>`<option value="${esc(k)}">${esc(k)}</option>`).join('')}</select></span></div>`:''}
+              <div class="f"><span style="grid-column:1/-1"><label>Sesión</label>
+                <input data-k="titulo" value="${esc(e.titulo||'')}" placeholder="WOD Fran, rodaje Z2…"></span></div>
+              <div class="f"><span style="grid-column:1/-1"><label>Descripción</label>
+                <textarea data-k="descripcion" placeholder="21-15-9 thrusters 30 kg · dominadas · TC 10 min">${esc(e.descripcion||'')}</textarea></span></div>
+              <div class="f">
+                <span><label>Benchmark</label><input data-k="wod" list="wods" value="${esc(e.wod||'')}" placeholder="Fran, Cindy…"></span>
+                <span><label>Resultado</label><input data-k="res" value="${esc(e.resultado?.texto||'')}" placeholder="5:40 o 7.5 rondas"></span>
+                <span><label>Esfuerzo</label><input data-k="rpe" type="number" min="1" max="10" value="${e.rpe??''}"></span>
+              </div>
+              <div class="f"><span style="grid-column:1/-1"><label>Métricas</label>
+                <input data-k="metricas" value="${esc(e.metricas||'')}" placeholder="Terminado en 5:40 · thrusters 15 kg"></span></div>
+              <div class="f"><span style="grid-column:1/-1"><label>Sensaciones</label>
+                <input data-k="sensaciones" value="${esc(e.sensaciones||'')}" placeholder="Piernas pesadas desde el calentamiento"></span></div>
+            </div>`};
+        })})
+    + `<div class="acc">
+         <button class="op" id="psave">Guardar en GitHub</button>
+         <button class="op" id="pacc">Acceso</button>
+         <span class="m" id="pmsg">${sucio?'Sin guardar':'Guardado'}</span>
+       </div>
+       <datalist id="wods">${Object.keys(WODS).map(w=>`<option value="${w}">`).join('')}</datalist>`, true);
+  conectar();
+
+  const m=$('main');
+  m.addEventListener('input',ev=>{
+    const f=ev.target.closest('[data-k]'); if(!f||f.tagName==='DIV') return;
+    const cont=f.closest('[data-iso]'); if(!cont) return;
+    const d=wk.dias[cont.dataset.iso], k=f.dataset.k, v=f.value.trim();
+    if(k==='rpe') d.rpe = v?Math.max(1,Math.min(10,+v)):null;
+    else if(k==='res'){
+      if(!v) delete d.resultado;
+      else { const t=v.match(/^(\d+):([0-5]?\d)$/);
+        d.resultado = t ? {tipo:'tiempo',valor:+t[1]*60+ +t[2],texto:v}
+                        : {tipo:'rondas',valor:parseFloat(v.replace(',','.'))||0,texto:v}; }
+    } else d[k]=v||null;
+    marcarSucio();
   });
-  document.querySelectorAll('.chip[data-tag]').forEach(b =>
-    b.setAttribute('aria-pressed', state.tags.has(b.dataset.tag)));
-  document.querySelectorAll('.chip[data-umbral]').forEach(b =>
-    b.setAttribute('aria-pressed', state.umbral === b.dataset.umbral));
+  m.addEventListener('change',ev=>{
+    const s=ev.target.closest('[data-tpl]'); if(!s||!s.value) return;
+    const iso=s.closest('[data-iso]').dataset.iso;
+    const t=tpl.find(([k])=>k===s.value)?.[1]; if(!t) return;
+    Object.assign(wk.dias[iso],{disciplina:t.disciplina,titulo:t.titulo,
+      descripcion:t.descripcion,zona_objetivo:t.zona_objetivo,wod:t.wod});
+    marcarSucio(); vPlan();
+  });
+  m.addEventListener('click',ev=>{
+    const b=ev.target.closest('.pick [data-v], .ops [data-v]'); if(!b) return;
+    ev.stopPropagation();
+    const g=b.parentElement, iso=b.closest('[data-iso]').dataset.iso, k=g.dataset.k;
+    const val = k==='zona_objetivo' ? +b.dataset.v : b.dataset.v;
+    const d=wk.dias[iso];
+    d[k] = d[k]===val ? null : val;
+    g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',
+      String((k==='zona_objetivo'?+x.dataset.v:x.dataset.v)===d[k])));
+    marcarSucio();
+  });
+
+  $('pp').onclick=()=>{planSem=addD(planSem,-7);vPlan();};
+  $('pn').onclick=()=>{planSem=addD(planSem,7);vPlan();};
+  $('pc').onclick=()=>{
+    const ant=PLANES.find(p=>p.semana===addD(planSem,-7));
+    if(!ant){ $('pmsg').textContent='No hay semana anterior'; return; }
+    for(let i=0;i<7;i++){ const s=ant.dias[addD(ant.semana,i)]||{};
+      wk.dias[addD(planSem,i)]={disciplina:s.disciplina,titulo:s.titulo,
+        descripcion:s.descripcion,zona_objetivo:s.zona_objetivo,wod:s.wod}; }
+    wk.foco=ant.foco; marcarSucio(); vPlan();
+  };
+  $('psave').onclick=guardar;
+  $('pacc').onclick=pedirAcceso;
 }
 
-function apply(){
-  const matched = DAYS.filter(matches);
-  const matchedDates = new Set(matched.map(d => d.date));
+/* --- escritura en GitHub --- */
+const acceso = () => ({
+  owner: localStorage.getItem('umbral.owner')||'',
+  repo:  localStorage.getItem('umbral.repo')||'',
+  token: sessionStorage.getItem('umbral.token')||'' });
+function pedirAcceso(){
+  const a=acceso();
+  const o=prompt('Usuario de GitHub', a.owner); if(o===null) return;
+  const r=prompt('Repositorio', a.repo||'UMBRAL'); if(r===null) return;
+  const t=prompt('Token con permiso Contents: read and write.\nSe guarda solo en esta pestaña.', a.token);
+  if(t===null) return;
+  localStorage.setItem('umbral.owner',o.trim());
+  localStorage.setItem('umbral.repo',r.trim());
+  sessionStorage.setItem('umbral.token',t.trim());
+  const m=$('pmsg'); if(m) m.textContent='Acceso guardado';
+}
+async function guardar(){
+  const {owner,repo,token}=acceso(), msg=$('pmsg');
+  if(!owner||!repo||!token){ pedirAcceso(); return; }
+  msg.textContent='Guardando…';
+  try{
+    const url=`https://api.github.com/repos/${owner}/${repo}/contents/data/planes.json`;
+    const H={Authorization:`Bearer ${token}`,Accept:'application/vnd.github+json'};
+    let sha=null;
+    const g=await fetch(url,{headers:H});
+    if(g.ok) sha=(await g.json()).sha;
+    else if(g.status!==404) throw new Error('GET '+g.status);
 
-  renderChart(matchedDates);
-  syncChipStates();
+    const limpio=PLANES.map(p=>({...p,dias:Object.fromEntries(
+      Object.entries(p.dias).filter(([,e])=>e&&Object.keys(e).some(k=>e[k]!=null&&e[k]!=='')))}))
+      .filter(p=>Object.keys(p.dias).length);
 
-  const total = DAYS.length;
-  $('result-count').textContent = isFiltered()
-    ? `${matched.length} de ${total} entradas`
-    : `${total} entradas`;
-  $('clear').hidden = !isFiltered();
-
-  const page = matched.slice(0, shown);
-  $('log').innerHTML = page.length
-    ? page.map(entryHTML).join('')
-    : `<div class="void-state">Ninguna sesión coincide<br>Prueba a quitar algún filtro</div>`;
-
-  $('load-more').hidden = matched.length <= shown;
-  $('load-more').textContent = `Mostrar más (${matched.length - shown} restantes)`;
+    const bytes=new TextEncoder().encode(JSON.stringify(limpio,null,1));
+    let bin=''; bytes.forEach(b=>bin+=String.fromCharCode(b));
+    const r=await fetch(url,{method:'PUT',headers:{...H,'Content-Type':'application/json'},
+      body:JSON.stringify({message:'plan '+HOY,content:btoa(bin),sha:sha||undefined})});
+    if(!r.ok) throw new Error('PUT '+r.status+' · '+(await r.text()).slice(0,110));
+    sucio=false; construir();
+    msg.textContent='Guardado '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+  }catch(e){ msg.textContent='Error: '+e.message; }
 }
 
-/* ---------- events ---------- */
-let qTimer;
-$('q').addEventListener('input', e => {
-  clearTimeout(qTimer);
-  qTimer = setTimeout(() => { state.q = e.target.value.trim(); shown = PAGE; apply(); }, 140);
-});
-
-document.addEventListener('keydown', e => {
-  if (e.key === '/' && document.activeElement !== $('q')){
-    e.preventDefault(); $('q').focus();
-  }
-  if (e.key === 'Escape' && document.activeElement === $('q')){
-    $('q').value = ''; state.q = ''; shown = PAGE; apply(); $('q').blur();
-  }
-});
-
-function toggleSet(set, value){
-  set.has(value) ? set.delete(value) : set.add(value);
+/* ================= D · REGISTRO ================= */
+const filtro={disc:new Set(),umbral:null};
+function pasa(s){
+  if(filtro.disc.size && !filtro.disc.has(s.disc)) return false;
+  if(filtro.umbral){ const r=s.rec; if(r==null) return false;
+    if(filtro.umbral==='over'&&r<THR) return false;
+    if(filtro.umbral==='under'&&r>=THR) return false; }
+  return true;
+}
+function vRegistro(){
+  const dc=new Map(); S.forEach(s=>{ if(s.disc) dc.set(s.disc,(dc.get(s.disc)||0)+1); });
+  const m=S.filter(pasa);
+  $('main').innerHTML = pan('Registro',`${m.length} de ${S.length} sesiones`,
+    (dc.size?`<div class="ctr" style="padding:14px 16px;border-bottom:1px solid var(--hilo)">
+      <div class="grp"><span class="m">Disciplina</span><div class="ops" id="fdisc">
+        ${[...dc.entries()].sort((a,b)=>b[1]-a[1]).map(([n,c])=>
+          `<button class="op" data-d="${esc(n)}" aria-pressed="${filtro.disc.has(n)}">${esc(n)} ${c}</button>`).join('')}
+      </div></div>
+      <div class="grp"><span class="m">Borde de tejido</span><div class="ops" id="fumb">
+        <button class="op" data-u="over" aria-pressed="${filtro.umbral==='over'}">Por encima</button>
+        <button class="op" data-u="under" aria-pressed="${filtro.umbral==='under'}">Por debajo</button>
+      </div></div></div>`:'')
+    + indice({cols:['','Sesión','Disciplina','Categoría','Fecha'],gc:'c-log',
+        vac:vacio('Todavía no hay sesiones','El sync de WHOOP y el plan las irán tejiendo.'),
+        items:m.slice(0,120).map(s=>({
+          iso:s.fecha, glifo:{rec:s.rec,min:s.min,disc:s.disc,zonas:s.zonas,wod:!!s.wod,rpe:s.rpe,over:(s.rec??0)>=THR},
+          t:`<b>${esc(s.titulo)}</b>`,
+          subs:[ s.disc?esc(s.disc):DASH, s.cats.map(esc).join(', ')||DASH ],
+          e:fd(s.fecha), on:(s.rec??0)>=THR, body:ficha(s),
+        }))}), true);
+  conectar();
+  const a=$('fdisc'), b=$('fumb');
+  if(a) a.onclick=e=>{const x=e.target.closest('[data-d]'); if(!x)return;
+    filtro.disc.has(x.dataset.d)?filtro.disc.delete(x.dataset.d):filtro.disc.add(x.dataset.d); vRegistro();};
+  if(b) b.onclick=e=>{const x=e.target.closest('[data-u]'); if(!x)return;
+    filtro.umbral = filtro.umbral===x.dataset.u?null:x.dataset.u; vRegistro();};
 }
 
-document.addEventListener('click', e => {
-  const chip = e.target.closest('.chip');
-  if (chip){
-    if (chip.dataset.tipo !== undefined) toggleSet(state.tipo, chip.dataset.tipo);
-    else if (chip.dataset.tag !== undefined) toggleSet(state.tags, chip.dataset.tag);
-    else if (chip.dataset.umbral !== undefined)
-      state.umbral = state.umbral === chip.dataset.umbral ? null : chip.dataset.umbral;
-    shown = PAGE; apply();
-    return;
-  }
-  const tag = e.target.closest('.entry .tag');
-  if (tag){
-    if (tag.dataset.tipo !== undefined) toggleSet(state.tipo, tag.dataset.tipo);
-    else if (tag.dataset.tag !== undefined) toggleSet(state.tags, tag.dataset.tag);
-    if ($('extra').hidden){
-      $('extra').hidden = false;
-      $('more-toggle').setAttribute('aria-expanded', 'true');
-      $('more-toggle').textContent = '– Menos filtros';
-    }
-    shown = PAGE; apply();
-    window.scrollTo({ top: document.querySelector('.filters').offsetTop - 20, behavior: 'smooth' });
-  }
-});
-
-$('more-toggle').addEventListener('click', () => {
-  const ex = $('extra');
-  ex.hidden = !ex.hidden;
-  $('more-toggle').setAttribute('aria-expanded', String(!ex.hidden));
-  $('more-toggle').textContent = ex.hidden ? '+ Más filtros' : '– Menos filtros';
-});
-
-$('clear').addEventListener('click', () => {
-  state.q = ''; state.tipo.clear(); state.tags.clear(); state.umbral = null;
-  $('q').value = ''; shown = PAGE; apply();
-});
-
-$('load-more').addEventListener('click', () => { shown += PAGE; apply(); });
-
-/* ---------- boot ---------- */
-async function boot(){
-  const now = new Date();
-  $('today').textContent = now.toLocaleDateString('es-ES', { day:'2-digit', month:'short' }).replace('.', '');
-  const diff = Math.ceil((new Date(RACE_DATE) - now) / 86400000);
-  $('countdown').textContent = diff > 0 ? String(diff).padStart(3, '0') : '000';
-
-  // Single request: the workflow keeps data/index.json consolidated.
-  try {
-    const r = await fetch('data/index.json', { cache:'no-store' });
-    if (r.ok) DAYS = await r.json();
-  } catch (e) {}
-
-  // Fallback for repos still on the old per-day layout.
-  if (!DAYS.length){
-    try {
-      const r = await fetch('data/manifest.json', { cache:'no-store' });
-      if (r.ok){
-        const manifest = await r.json();
-        const results = await Promise.all(manifest.map(date =>
-          fetch(`data/${date}.json`, { cache:'no-store' })
-            .then(res => res.ok ? res.json() : null).catch(() => null)));
-        DAYS = results.filter(Boolean);
-      }
-    } catch (e) {}
-  }
-
-  DAYS.sort((a, b) => b.date.localeCompare(a.date));
-
-  if (!DAYS.length){
-    renderChart(new Set());
-    renderReadings(null);
-    $('result-count').textContent = DASH;
-    $('log').innerHTML = `<div class="void-state">Sin datos<br>El primer sync llenará esto</div>`;
-    return;
-  }
-
-  buildChips();
-  renderReadings(DAYS[0]);
-  apply();
+/* ================= E · MARCAS ================= */
+function historial(n){
+  const o=S.filter(s=>s.wod===n&&s.resultado).map(s=>({fecha:s.fecha,...s.resultado}));
+  const t=o[0]?.tipo==='tiempo';
+  o.sort((a,b)=>t?a.valor-b.valor:b.valor-a.valor);
+  return o;
+}
+function vMarcas(){
+  const nom=[...new Set(S.filter(s=>s.wod&&s.resultado).map(s=>s.wod))].sort();
+  $('main').innerHTML = pan('Marcas',`${nom.length} benchmarks`,
+    indice({cols:['','WOD','Mejor','Intentos','Progresión'],gc:'c-mar',
+      vac:vacio('Sin benchmarks todavía','Marca un WOD con nombre en el plan y anota su resultado.'),
+      items:nom.map(n=>{
+        const h=historial(n), mejor=h[0];
+        const crono=[...h].sort((a,b)=>a.fecha.localeCompare(b.fecha));
+        const t=mejor.tipo==='tiempo';
+        let prog=DASH, mejora=false;
+        if(crono.length>1){ const dv=crono[crono.length-1].valor-crono[0].valor;
+          mejora = t ? dv<0 : dv>0;
+          prog = dv===0 ? 'Igual'
+               : (mejora?'Mejora ':'Empeora ')+(t?Math.abs(dv)+' s':Math.abs(r1(dv))+' rondas'); }
+        const ses=S.find(s=>s.wod===n&&s.resultado);
+        return { glifo:{rec:ses?.rec,min:ses?.min,disc:ses?.disc,zonas:ses?.zonas,wod:true,rpe:ses?.rpe,over:(ses?.rec??0)>=THR},
+          t:`<b>${esc(n)}</b>`,
+          subs:[ esc(mejor.texto), crono.length+(crono.length===1?' intento':' intentos') ],
+          e: prog, on: mejora,
+          body:`<div class="det"><span></span>
+            <div><span class="k m">Descripción</span><p>${esc(WODS[n]||'—')}</p>
+              <span class="m">${prog}</span></div>
+            <div><table class="spec">${crono.slice().reverse().map(x=>
+              `<tr><td>${fd(x.fecha,{day:'2-digit',month:'short',year:'numeric'})}</td>
+               <td>${esc(x.texto)}${x.valor===mejor.valor?' · mejor':''}</td></tr>`).join('')}</table></div></div>`};
+      })}), true);
+  conectar();
 }
 
-boot();
+/* ================= F · ANÁLISIS ================= */
+function vAnalisis(){
+  const conRec=DIAS.filter(d=>d.recovery_score!=null);
+  const ult=conRec.slice(-30);
+  const sobre=ult.filter(d=>d.recovery_score>=THR).length;
+  const zt=[0,0,0,0,0,0];
+  DIAS.forEach(d=>(d.workouts||[]).forEach(w=>{ if(w.zones) w.zones.forEach((m,i)=>zt[i]+=m); }));
+  const zs=zt.reduce((a,b)=>a+b,0);
+  const hrv=DIAS.filter(d=>d.hrv_rmssd_milli!=null).map(d=>d.hrv_rmssd_milli);
+  let ok=0,tot=0;
+  S.forEach(s=>{ if(!s.zonaObj||!s.hecho||!s.zonas) return; tot++;
+    if(s.zonas.indexOf(Math.max(...s.zonas))===s.zonaObj) ok++; });
+
+  const items=[];
+
+  items.push({ t:`<b>${ult.length?`Has cruzado el borde ${sobre} de los últimos ${ult.length} días`:'Aún no hay lecturas de recuperación'}</b>`,
+    subs:[], e: ult.length?'15 a 20 esperable':DASH,
+    body:`<div style="padding-top:12px">
+      ${ult.length?`<div id="telaAna"></div>
+      <p class="gr" style="margin-top:10px;font-size:14px">Relleno, cruzaste. Punteado, tejido abierto.
+      La separación de la urdimbre es la tensión: se cierra cuando la carga reciente sube más rápido que la de fondo.</p>`
+      :'<p class="gr">Hacen falta días sincronizados de WHOOP.</p>'}</div>`});
+
+  if(zs){
+    const z2=Math.round(zt[2]/zs*100);
+    items.push({ t:`<b>${z2>=45?'El volumen en zona 2 está donde debe':'Tejes más fuerte de lo que pide el bloque'}</b>`,
+      subs:[], e:`${z2} % en Z2`,
+      body:`<div style="padding-top:12px">
+        <table class="spec" style="max-width:420px">
+          <tr><td>Zona 2</td><td>${z2} % · objetivo ${CFG.Z2_OBJETIVO} %</td></tr>
+          <tr><td>Zona 3</td><td>${Math.round(zt[3]/zs*100)} %</td></tr>
+          <tr><td>Zona 4 – 5</td><td>${Math.round((zt[4]+zt[5])/zs*100)} %</td></tr>
+          <tr><td>Tiempo total</td><td>${Math.round(zs/36e5)} h</td></tr>
+        </table></div>`});
+  }
+
+  if(hrv.length>=5){
+    const mitad=Math.ceil(hrv.length/2);
+    const dl=r1(media(hrv.slice(mitad))-media(hrv.slice(0,mitad)));
+    items.push({ t:`<b>Tu variabilidad ${dl>2?'está subiendo':dl<-2?'está bajando':'lleva el periodo estable'}</b>`,
+      subs:[], e:`${r1(hrv[hrv.length-1])} ms`,
+      body:`<div style="padding-top:12px">
+        <table class="spec" style="max-width:420px">
+          <tr><td>Hoy</td><td>${r1(hrv[hrv.length-1])} ms</td></tr>
+          <tr><td>Media del periodo</td><td>${r1(media(hrv))} ms</td></tr>
+          <tr><td>Cambio</td><td>${dl>0?'+':''}${dl} ms</td></tr>
+          <tr><td>Días con dato</td><td>${hrv.length}</td></tr>
+        </table>
+        <p class="gr" style="margin-top:10px;font-size:14px">Con la ferritina baja, esta es la señal a vigilar.
+        La lectura clínica la hace tu médico.</p></div>`});
+  }
+
+  if(tot){
+    const ac=Math.round(ok/tot*100);
+    items.push({ t:`<b>${ac>=70?'Sueles acertar la zona que planificas':ac>=40?'Aciertas la zona menos de la mitad de las veces':'Casi nunca tejes en la zona que planificaste'}</b>`,
+      subs:[], e:`${ok} de ${tot}`,
+      body:`<div style="padding-top:12px"><p class="gr" style="max-width:52ch">
+        Compara la zona objetivo con la zona donde WHOOP dice que estuviste de verdad.
+        Ningún reloj sabe qué pensabas hacer: esa comparación solo existe aquí.</p></div>`});
+  }
+
+  $('main').innerHTML = pan('Análisis',`${DIAS.length} días registrados`,
+    indice({cols:['','Lectura','Dato'],gc:'c-ana',items,
+      vac:vacio('Sin lecturas todavía','Aparecen según se acumulan días.')}), true)
+  + pan('Lo que esto no es','',
+     `<p class="gr" style="max-width:60ch">Umbral no predice lesiones. La literatura es explícita:
+      intervienen tantas variables que la probabilidad no puede asociarse a ninguna de forma aislada,
+      y la capacidad de predecir a nivel individual es pobre. Lo que la tela describe es un patrón
+      de carga, no un diagnóstico.</p>`);
+  conectar();
+
+  const ta=$('telaAna');
+  if(ta && ult.length){
+    const desde=ult[0].date, hasta=ult[ult.length-1].date;
+    ta.appendChild(tela(rango(lunesDe(desde),hasta),{W:1100,H:190,pad:14,thr:THR,
+      tension:s=>tensionEn(addD(lunesDe(desde),s*7+3))||1}));
+  }
+}
+
+/* ================= leyenda ================= */
+function vLeyenda(){
+  const ej=[
+    ['Duración','El radio del anillo crece con los minutos.',{min:80,disc:'Carrera',zonas:[0,3,10,30,20,4],rec:70,over:true}],
+    ['Zonas','Cada arco es una zona de pulso, del crudo al granza.',{min:45,disc:'Hyrox',zonas:[0,2,8,14,18,6],rec:70,over:true}],
+    ['Disciplina','El relleno interior lleva el tinte de la disciplina.',{min:45,disc:'Crossfit',zonas:[0,3,9,14,16,4],rec:70,over:true}],
+    ['Borde de tejido','Relleno denso si cruzaste el umbral.',{min:45,disc:'Carrera',zonas:[0,4,14,12,6,1],rec:50,over:false}],
+    ['Benchmark','Un punto en el centro marca un WOD con nombre.',{min:38,disc:'Crossfit',zonas:[0,2,6,12,14,5],wod:true,rec:70,over:true}],
+    ['Esfuerzo','Un halo punteado cuando el RPE llega a 8.',{min:45,disc:'Hyrox',zonas:[0,2,6,12,16,8],rpe:9,rec:70,over:true}],
+  ];
+  const tintes=[['Crossfit','rubia'],['Hyrox','índigo'],['Carrera','ocre'],
+                ['Gimnásticos','cardo'],['Fuerza','hierro'],['Descanso','crudo']];
+  $('main').innerHTML =
+    pan('Cómo se lee un glifo','Una sesión en un dibujo',
+      `<div class="ley">${ej.map((e,i)=>
+        `<div><div class="fila"><span data-glifo='${JSON.stringify(e[2])}'></span>
+          <b>${e[0]}</b></div><span>${e[1]}</span></div>`).join('')}</div>`, true)
+  + pan('El muestrario','El tinte dice la disciplina',
+      `<div class="ley">${tintes.map(t=>
+        `<div><div class="muestra" style="background:${TINTE[t[0]]}"></div>
+          <b>${t[0]}</b><span>${t[1]}</span></div>`).join('')}</div>`, true)
+  + pan('Los dos umbrales','',
+      `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:26px">
+        <div><b style="font-style:italic;font-size:18px">Umbral de recuperación</b>
+          <p class="gr" style="margin-top:6px">Diario, lo mide WHOOP. Es el borde de tejido:
+          la línea por la que pasa cada hilo. Dice si esta mañana tu sistema acepta la sesión.</p></div>
+        <div><b style="font-style:italic;font-size:18px">Umbral del tejido</b>
+          <p class="gr" style="margin-top:6px">Acumulado, no lo mide ningún reloj. Es la tensión de la trama:
+          cuánto se cierra cuando la carga reciente sube más rápido que la de fondo.
+          Las lesiones vienen con más frecuencia de la repetición que del día excesivo.</p></div>
+      </div>`);
+  pintarGlifos();
+}
+
+/* ================= router ================= */
+const V=[
+  ['estado','Estado','Cómo llegas hoy',vEstado],
+  ['semana','Semana','Plan contra ejecutado',vSemana],
+  ['plan','Plan','Planificar la semana',vPlan],
+  ['registro','Registro','Todas las sesiones',vRegistro],
+  ['marcas','Marcas','WOD benchmark',vMarcas],
+  ['analisis','Análisis','Lecturas de la tela',vAnalisis],
+  ['leyenda','Leyenda','Cómo se lee',vLeyenda],
+];
+let vista='estado';
+function ir(id){
+  const v=V.find(x=>x[0]===id); if(!v) return;
+  if(vista==='plan'&&id!=='plan'&&sucio&&!confirm('Tienes cambios del plan sin guardar. ¿Salir igualmente?')) return;
+  vista=id;
+  document.querySelectorAll('nav.tabs button,#mlist button')
+    .forEach(b=>b.setAttribute('aria-current',String(b.dataset.v===id)));
+  v[3](); cerrarMenu(); window.scrollTo({top:0});
+}
+function abrirMenu(){ $('menu').dataset.open='1'; $('burger').setAttribute('aria-expanded','true');
+  document.body.style.overflow='hidden'; }
+function cerrarMenu(){ $('menu').dataset.open='0'; $('burger').setAttribute('aria-expanded','false');
+  document.body.style.overflow=''; }
+
+(async function(){
+  $('tabs').innerHTML=V.map(([id,l])=>`<button data-v="${id}" aria-current="${id==='estado'}">${l}</button>`).join('');
+  $('tabs').onclick=e=>{const b=e.target.closest('button'); if(b) ir(b.dataset.v);};
+  $('mlist').innerHTML=V.map(([id,l,d])=>
+    `<li><button data-v="${id}" aria-current="${id==='estado'}">
+      <span class="t2">${l}</span><span class="d2">${d}</span></button></li>`).join('');
+  $('mlist').onclick=e=>{const b=e.target.closest('button'); if(b) ir(b.dataset.v);};
+  $('burger').onclick=()=>$('menu').dataset.open==='1'?cerrarMenu():abrirMenu();
+  $('burger2').onclick=cerrarMenu;
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') cerrarMenu(); });
+  window.addEventListener('beforeunload',e=>{ if(sucio){ e.preventDefault(); e.returnValue=''; } });
+  const u=ubic();
+  $('cuenta').textContent=`${u.faltan} días para Hyrox`;
+  await cargar();
+  ir('estado');
+})();
+
 </script>
 </body>
 </html>
