@@ -4,7 +4,7 @@
   "photos": [],
   "tipo": null,
   "etiquetas": [],
-  "day_strain": 0.3,
+  "day_strain": 1.0,
   "sleep_performance_percentage": 82.0,
   "sleep_efficiency_percentage": 85.96345,
   "workouts": [
