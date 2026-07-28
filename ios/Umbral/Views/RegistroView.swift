@@ -98,7 +98,7 @@ struct RegistroView: View {
     private var lista: some View {
         if filtradas.isEmpty {
             VStack(spacing: 6) {
-                Text("nada aún").font(.system(size: 20, design: .serif)).italic().foregroundStyle(.umbralTeja)
+                Text("nada aún").font(.umbralSerif(20)).foregroundStyle(.umbralTeja)
                 Text("No hay sesiones que coincidan con el filtro, o todavía no se han registrado.")
                     .font(.system(size: 13)).foregroundStyle(.umbralHumo)
                     .multilineTextAlignment(.center)

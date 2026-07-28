@@ -273,8 +273,7 @@ struct UmbralIsotype: View {
     var body: some View {
         HStack(alignment: .bottom, spacing: size * 0.03) {
             Text("u")
-                .font(.system(size: size, weight: .regular, design: .serif))
-                .italic()
+                .font(.umbralSerif(size))
                 .foregroundStyle(color)
                 .fixedSize()
             Rectangle()

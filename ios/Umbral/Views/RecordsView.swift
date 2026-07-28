@@ -43,7 +43,7 @@ struct RecordsView: View {
 
     private var vacio: some View {
         VStack(spacing: 6) {
-            Text("crea tu primer récord").font(.system(size: 20, design: .serif)).italic().foregroundStyle(.umbralTeja)
+            Text("crea tu primer récord").font(.umbralSerif(20)).foregroundStyle(.umbralTeja)
             Text("Puede ser tu mejor 5K, la carga máxima en peso muerto, la sesión más larga en Z2.")
                 .font(.system(size: 13)).foregroundStyle(.umbralHumo)
                 .multilineTextAlignment(.center)

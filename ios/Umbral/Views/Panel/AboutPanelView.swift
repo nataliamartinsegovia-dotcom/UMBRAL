@@ -35,8 +35,7 @@ struct AboutPanelView: View {
 
     private func editorialLink(_ text: String) -> some View {
         Text(text)
-            .font(.system(size: 15, design: .serif))
-            .italic()
+            .font(.umbralSerif(15))
             .underline()
             .foregroundStyle(.umbralTinta)
     }

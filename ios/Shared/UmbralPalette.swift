@@ -32,6 +32,19 @@ extension ShapeStyle where Self == Color {
     static var umbralHumo: Color { .umbralHumo }
 }
 
+extension Font {
+    /// Fraunces todavía no está empaquetada (falta el .ttf con licencia
+    /// OFL en Resources/Fonts) — Georgia Italic es la fuente serif más
+    /// cercana ya instalada de serie en iOS, y es la MISMA que usa el
+    /// icono de la app (ver icon-1024.png). Un solo punto de verdad para
+    /// que el isotipo/wordmark se vea igual en el icono, el panel de
+    /// usuario y cualquier titular editorial de la app — antes cada sitio
+    /// usaba el serif genérico del sistema (New York) y no coincidían.
+    static func umbralSerif(_ size: CGFloat, italic: Bool = true) -> Font {
+        .custom(italic ? "Georgia-Italic" : "Georgia", size: size)
+    }
+}
+
 enum UMetrics {
     static let threshold = 67.0
     static let raceDateISO = "2026-12-12"

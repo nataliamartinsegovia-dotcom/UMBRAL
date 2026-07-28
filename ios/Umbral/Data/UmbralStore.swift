@@ -433,18 +433,27 @@ final class UmbralStore: ObservableObject {
     /// GitHub — no hay botón "Guardar", se guarda solo unos segundos
     /// después de la última edición. `save()` también corre al pasar la
     /// app a background, como red de seguridad.
+    ///
+    /// `autosaveTask` solo referencia la fase de ESPERA. En cuanto el
+    /// temporizador cumple y `save()` va a arrancar, se desengancha de
+    /// `autosaveTask` antes de la llamada de red — así, si el usuario
+    /// sigue editando mientras ese guardado está en vuelo, la siguiente
+    /// edición cancela solo un temporizador nuevo, nunca la petición HTTP
+    /// ya en marcha (eso lanzaba CancellationError, "cancelled", visible
+    /// como si fuera un error real).
     func markDirty() {
         dirty = true
         autosaveTask?.cancel()
-        autosaveTask = Task { [weak self] in
+        let task = Task { [weak self] in
             try? await Task.sleep(nanoseconds: 2_500_000_000)
             guard !Task.isCancelled else { return }
+            self?.autosaveTask = nil
             await self?.save()
         }
+        autosaveTask = task
     }
 
     func save() async {
-        autosaveTask?.cancel()
         guard hasToken else {
             errorMessage = "Configura tu token de GitHub en el panel de usuario para guardar."
             return
@@ -461,6 +470,8 @@ final class UmbralStore: ObservableObject {
             try await service.putFile(path: "data/planes.json", content: planesJSON, token: token)
             try await service.putFile(path: "data/records.json", content: recordsJSON, token: token)
             dirty = false
+        } catch is CancellationError {
+            // Guardado cancelado por una edición más nueva ya en camino — no es un error real.
         } catch {
             errorMessage = error.localizedDescription
         }

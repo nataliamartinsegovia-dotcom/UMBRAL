@@ -64,7 +64,7 @@ struct HoyView: View {
             ThresholdBadge(state: thresholdState, recovery: day?.recoveryScore)
             if day?.recoveryScore != nil {
                 Text(thresholdState == .sobre ? "buen día · aprieta con cabeza" : "hoy toca calma · zona máx 3")
-                    .font(.system(size: 17, weight: .regular, design: .serif)).italic()
+                    .font(.umbralSerif(17))
                     .foregroundStyle(.umbralTeja)
             }
 

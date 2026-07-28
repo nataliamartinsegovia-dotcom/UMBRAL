@@ -2,22 +2,23 @@ import SwiftUI
 
 // Tipografía del design system UMBRAL 18 · dirección Lewalk. Paleta y
 // UMetrics viven en Shared/UmbralPalette.swift (los usa también el widget).
-// Se usa el serif del sistema (New York) en cursiva para titulares, y SF Pro
-// para todo lo demás — hasta que se añadan los binarios reales de
-// Fraunces / Instrument Sans a Resources/Fonts.
+// Serif itálica = Georgia (ver Font.umbralSerif en Shared/UmbralPalette.swift,
+// misma fuente que el isotipo/icono) para titulares, SF Pro para todo lo
+// demás — hasta que se añadan los binarios reales de Fraunces / Instrument
+// Sans a Resources/Fonts.
 
 enum UType {
     /// H0 · hero
     static func hero(_ size: CGFloat = 52) -> Font {
-        .system(size: size, weight: .light, design: .serif).italic()
+        .umbralSerif(size)
     }
     /// H1 · sección
     static func section(_ size: CGFloat = 26) -> Font {
-        .system(size: size, weight: .light, design: .serif).italic()
+        .umbralSerif(size)
     }
     /// H2 · card
     static func card(_ size: CGFloat = 20) -> Font {
-        .system(size: size, weight: .regular, design: .serif).italic()
+        .umbralSerif(size)
     }
     static func body(_ size: CGFloat = 15) -> Font {
         .system(size: size, weight: .regular, design: .default)
