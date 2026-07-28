@@ -73,6 +73,7 @@ final class UmbralStore: ObservableObject {
     @Published var dias: [DayRecord] = []
     @Published var planes: [PlanSemana] = []
     @Published var records: [RecordItem] = []
+    @Published var perfil = PerfilUsuario()
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published private(set) var dirty = false
@@ -248,6 +249,7 @@ final class UmbralStore: ObservableObject {
         async let diasR: [DayRecord]? = service.fetchJSON("data/index.json", as: [DayRecord].self)
         async let planesR: [PlanSemana]? = service.fetchJSON("data/planes.json", as: [PlanSemana].self)
         async let recordsR: [RecordItem]? = service.fetchJSON("data/records.json", as: [RecordItem].self)
+        async let perfilR: PerfilUsuario? = service.fetchJSON("data/perfil.json", as: PerfilUsuario.self)
 
         var loadedDias = (await diasR) ?? []
         let loadedPlanes = (await planesR) ?? []
@@ -270,6 +272,7 @@ final class UmbralStore: ObservableObject {
         dias = loadedDias.sorted { $0.date > $1.date }
         planes = loadedPlanes
         records = loadedRecords
+        perfil = (await perfilR) ?? PerfilUsuario()
         dirty = false
 
         if let latest = dias.first {
@@ -375,6 +378,32 @@ final class UmbralStore: ObservableObject {
         planes.first { $0.semana == monday }?.bloque ?? "—"
     }
 
+    // MARK: - Perfil (bio + próximos retos)
+
+    var bioBinding: Binding<String> {
+        Binding(
+            get: { self.perfil.bio ?? "" },
+            set: { newValue in
+                self.perfil.bio = newValue.isEmpty ? nil : newValue
+                self.markDirty()
+            }
+        )
+    }
+
+    func addReto(_ reto: RetoItem) {
+        perfil.retos.append(reto)
+        markDirty()
+    }
+
+    func deleteReto(_ reto: RetoItem) {
+        perfil.retos.removeAll { $0.id == reto.id }
+        markDirty()
+    }
+
+    var nextReto: RetoItem? {
+        perfil.retos.filter { $0.fecha >= today }.min { $0.fecha < $1.fecha }
+    }
+
     func range(_ from: String, _ to: String) -> [DayRecord?] {
         var out: [DayRecord?] = []
         var c = from
@@ -467,8 +496,10 @@ final class UmbralStore: ObservableObject {
             enc.outputFormatting = [.prettyPrinted, .sortedKeys]
             let planesJSON = String(data: try enc.encode(planes), encoding: .utf8) ?? "[]"
             let recordsJSON = String(data: try enc.encode(records), encoding: .utf8) ?? "[]"
+            let perfilJSON = String(data: try enc.encode(perfil), encoding: .utf8) ?? "{}"
             try await service.putFile(path: "data/planes.json", content: planesJSON, token: token)
             try await service.putFile(path: "data/records.json", content: recordsJSON, token: token)
+            try await service.putFile(path: "data/perfil.json", content: perfilJSON, token: token)
             dirty = false
         } catch is CancellationError {
             // Guardado cancelado por una edición más nueva ya en camino — no es un error real.

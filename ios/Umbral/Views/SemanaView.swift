@@ -12,7 +12,8 @@ struct SemanaView: View {
     }
 
     private var met: WeekMetrics { store.metrics(forWeek: semAct) }
-    private var raceDays: Int { UDate.daysUntil(UMetrics.raceDateISO, from: store.today) }
+    private var nextReto: RetoItem? { store.nextReto }
+    private var raceDays: Int? { nextReto.map { UDate.daysUntil($0.fecha, from: store.today) } }
 
     var body: some View {
         UmbralScreen(content: {
@@ -38,8 +39,10 @@ struct SemanaView: View {
             }
             Spacer()
             VStack(alignment: .trailing, spacing: 4) {
-                Text("Hyrox Madrid").capLabel().foregroundStyle(.umbralHueso)
-                Text("\(raceDays) días").font(UType.card(16)).foregroundStyle(.umbralTeja)
+                Text(nextReto?.nombre ?? "Sin reto activo").capLabel().foregroundStyle(.umbralHueso)
+                if let raceDays {
+                    Text("\(raceDays) días").font(UType.card(16)).foregroundStyle(.umbralTeja)
+                }
             }
         }
     }

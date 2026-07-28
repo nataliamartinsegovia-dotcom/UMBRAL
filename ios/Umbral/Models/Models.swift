@@ -273,3 +273,53 @@ struct SessionEntry: Identifiable, Hashable {
 }
 
 let DISC_LIST = ["Crossfit", "Hyrox", "Carrera", "Gimnásticos", "Fuerza", "Movilidad", "Descanso"]
+
+// MARK: - data/perfil.json (lectura + escritura)
+
+struct RetoItem: Codable, Identifiable, Hashable {
+    var id: String
+    var nombre: String
+    var fecha: String        // ISO yyyy-MM-dd, mismo formato que DayRecord.date
+    var disciplina: String?  // uno de DISC_LIST, opcional
+    var lugar: String?
+
+    init(id: String = UUID().uuidString, nombre: String, fecha: String,
+         disciplina: String? = nil, lugar: String? = nil) {
+        self.id = id
+        self.nombre = nombre
+        self.fecha = fecha
+        self.disciplina = disciplina
+        self.lugar = lugar
+    }
+
+    enum CodingKeys: String, CodingKey { case id, nombre, fecha, disciplina, lugar }
+
+    /// id con fallback a UUID nuevo — el decoder sintetizado no aplica valores
+    /// por defecto a claves ausentes.
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decodeIfPresent(String.self, forKey: .id) ?? UUID().uuidString
+        nombre = try c.decode(String.self, forKey: .nombre)
+        fecha = try c.decode(String.self, forKey: .fecha)
+        disciplina = try c.decodeIfPresent(String.self, forKey: .disciplina)
+        lugar = try c.decodeIfPresent(String.self, forKey: .lugar)
+    }
+}
+
+struct PerfilUsuario: Codable, Hashable {
+    var bio: String?
+    var retos: [RetoItem]
+
+    init(bio: String? = nil, retos: [RetoItem] = []) {
+        self.bio = bio
+        self.retos = retos
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        bio = try c.decodeIfPresent(String.self, forKey: .bio)
+        retos = try c.decodeIfPresent([RetoItem].self, forKey: .retos) ?? []
+    }
+
+    enum CodingKeys: String, CodingKey { case bio, retos }
+}

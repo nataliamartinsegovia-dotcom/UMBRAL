@@ -9,7 +9,8 @@ struct PanelRoot: View {
     @ObservedObject var store: UmbralStore
     @Environment(\.dismiss) private var dismiss
 
-    private var raceDays: Int { UDate.daysUntil(UMetrics.raceDateISO, from: store.today) }
+    private var nextReto: RetoItem? { store.nextReto }
+    private var raceDays: Int? { nextReto.map { UDate.daysUntil($0.fecha, from: store.today) } }
 
     var body: some View {
         NavigationStack {
@@ -60,7 +61,8 @@ struct PanelRoot: View {
                         color: store.currentStreak > 0 ? .umbralTeja : .umbralTinta)
             summaryStat("WHOOP", store.whoopConnected ? "En vivo" : "Sin conectar",
                         color: store.whoopConnected ? .umbralTeja : .umbralHumo)
-            summaryStat("Objetivo", "\(raceDays) días", sub: UMetrics.raceName, color: .umbralTeja)
+            summaryStat("Objetivo", raceDays.map { "\($0) días" } ?? "—",
+                        sub: nextReto?.nombre ?? "Sin retos", color: nextReto != nil ? .umbralTeja : .umbralHumo)
             summaryStat("Guardado", store.dirty ? "Sin guardar" : "Al día",
                         color: store.dirty ? .umbralTeja : .umbralTinta)
         }
@@ -76,6 +78,12 @@ struct PanelRoot: View {
 
     private var nav: some View {
         VStack(spacing: 0) {
+            navRow(title: "Perfil", subtitle: "Bio · próximos retos",
+                   value: raceDays.map { "\($0) días" } ?? "Sin retos",
+                   valueColor: nextReto != nil ? .umbralTeja : .umbralHumo) {
+                PerfilPanelView(store: store)
+            }
+            DashedDivider(color: .umbralLineaLight.opacity(0.6))
             navRow(icon: AnyView(
                 UmbralSyncIcon()
                     .umbralIconStyle(store.whoopConnected ? .umbralTeja : .umbralTinta.opacity(0.7), lineWidth: 1.25)
