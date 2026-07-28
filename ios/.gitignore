@@ -1,0 +1,14 @@
+# Generado por xcodegen a partir de project.yml — no se versiona.
+# Regenerar con: xcodegen generate
+Umbral.xcodeproj/
+
+# Xcode
+xcuserdata/
+*.xcuserstate
+DerivedData/
+.build/
+*.moved-aside
+*.xcscmblueprint
+
+# macOS
+.DS_Store
