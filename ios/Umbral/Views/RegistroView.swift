@@ -183,12 +183,12 @@ private struct RegistroDetailView: View {
                         Text("Datos Whoop").capLabel(opacity: 0.6).foregroundStyle(.umbralTinta)
                     }
                     VStack(spacing: 0) {
-                        row("Recuperación", session.rec.map { "\(Int($0)) %" })
-                        row("VFC", session.hrv.map { "\(Int($0)) ms" })
-                        row("Sueño", session.sueno.map { "\(Int($0)) %" })
-                        row("Carga del día", session.strain.map { String(format: "%.1f", $0) })
-                        if let z = session.zonaObjetivo { row("Zona objetivo", "Z\(z)") }
-                        if let r = session.rpe { row("Esfuerzo", "RPE \(r)") }
+                        PapelSpecRow(label: "Recuperación", value: session.rec.map { "\(Int($0)) %" })
+                        PapelSpecRow(label: "VFC", value: session.hrv.map { "\(Int($0)) ms" })
+                        PapelSpecRow(label: "Sueño", value: session.sueno.map { "\(Int($0)) %" })
+                        PapelSpecRow(label: "Carga del día", value: session.strain.map { String(format: "%.1f", $0) })
+                        if let z = session.zonaObjetivo { PapelSpecRow(label: "Zona objetivo", value: "Z\(z)") }
+                        if let r = session.rpe { PapelSpecRow(label: "Esfuerzo", value: "RPE \(r)") }
                     }
                 }
                 .padding(16)
@@ -210,15 +210,5 @@ private struct RegistroDetailView: View {
             Text(label).capLabel(opacity: 0.6).foregroundStyle(.umbralTinta)
             Text(text).font(.system(size: 14)).foregroundStyle(.umbralTinta.opacity(0.85))
         }
-    }
-
-    private func row(_ label: String, _ value: String?) -> some View {
-        HStack {
-            Text(label).font(UType.label(9)).foregroundStyle(.umbralHumo)
-            Spacer()
-            Text(value ?? "—").font(UType.card(13)).foregroundStyle(.umbralTinta)
-        }
-        .padding(.vertical, 8)
-        .overlay(DashedDivider(color: .umbralLineaLight), alignment: .bottom)
     }
 }

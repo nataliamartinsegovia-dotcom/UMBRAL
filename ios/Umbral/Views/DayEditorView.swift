@@ -21,7 +21,7 @@ struct DayEditorView: View {
                         .foregroundStyle(.umbralTinta)
                 }
 
-                field("Título de la sesión") {
+                PapelField(label: "Título de la sesión") {
                     TextField("Series Z3, sled push técnico…", text: Binding(
                         get: { entryBinding.wrappedValue.titulo ?? "" },
                         set: { entryBinding.wrappedValue.titulo = $0.isEmpty ? nil : $0 }
@@ -55,7 +55,7 @@ struct DayEditorView: View {
                     set: { entryBinding.wrappedValue.duracionPrevista = Int($0) }
                 ), range: 10...120, step: 5, format: { "\(Int($0)) min" })
 
-                field("Descripción") {
+                PapelField(label: "Descripción") {
                     TextField("Calentar 10' · 4×8' Z3 con 2' recuperación", text: Binding(
                         get: { entryBinding.wrappedValue.descripcion ?? "" },
                         set: { entryBinding.wrappedValue.descripcion = $0.isEmpty ? nil : $0 }
@@ -64,7 +64,7 @@ struct DayEditorView: View {
                     .textFieldStyle(.plain)
                 }
 
-                field("Resultado") {
+                PapelField(label: "Resultado") {
                     TextField("21:04, 100kg, 7,5 rondas", text: Binding(
                         get: { entryBinding.wrappedValue.resultado ?? "" },
                         set: { entryBinding.wrappedValue.resultado = $0.isEmpty ? nil : $0 }
@@ -72,7 +72,7 @@ struct DayEditorView: View {
                     .textFieldStyle(.plain)
                 }
 
-                field("Sensaciones") {
+                PapelField(label: "Sensaciones") {
                     TextField("Piernas pesadas desde el warm-up", text: Binding(
                         get: { entryBinding.wrappedValue.sensaciones ?? "" },
                         set: { entryBinding.wrappedValue.sensaciones = $0.isEmpty ? nil : $0 }
@@ -95,17 +95,6 @@ struct DayEditorView: View {
         .preferredColorScheme(.light)
     }
 
-    private func field<Content: View>(_ label: String, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(label).capLabel(opacity: 0.6).foregroundStyle(.umbralTinta)
-            content()
-                .font(.system(size: 14))
-                .foregroundStyle(.umbralTinta)
-                .padding(10)
-                .overlay(Rectangle().stroke(Color.umbralLineaLight, lineWidth: 1))
-        }
-    }
-
     private func sliderRow(_ label: String, value: Binding<Double>, range: ClosedRange<Double>, step: Double = 1, format: (Double) -> String) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
@@ -125,16 +114,16 @@ struct DayEditorView: View {
                 Text("Datos Whoop de \(UDate.label(iso))").capLabel(opacity: 0.6).foregroundStyle(.umbralTinta)
             }
             VStack(spacing: 0) {
-                specRow("Recuperación", day?.recoveryScore.map { "\(Int($0)) %" })
-                specRow("VFC (RMSSD)", day?.hrvRmssdMilli.map { "\(Int($0)) ms" })
-                specRow("FC reposo", day?.restingHeartRate.map { "\(Int($0)) bpm" })
-                specRow("Rendimiento sueño", day?.sleepPerformancePercentage.map { "\(Int($0)) %" })
-                specRow("Carga del día", day?.dayStrain.map { String(format: "%.1f", $0) })
+                PapelSpecRow(label: "Recuperación", value: day?.recoveryScore.map { "\(Int($0)) %" })
+                PapelSpecRow(label: "VFC (RMSSD)", value: day?.hrvRmssdMilli.map { "\(Int($0)) ms" })
+                PapelSpecRow(label: "FC reposo", value: day?.restingHeartRate.map { "\(Int($0)) bpm" })
+                PapelSpecRow(label: "Rendimiento sueño", value: day?.sleepPerformancePercentage.map { "\(Int($0)) %" })
+                PapelSpecRow(label: "Carga del día", value: day?.dayStrain.map { String(format: "%.1f", $0) })
                 if let ws = day?.workouts, !ws.isEmpty {
                     ForEach(Array(ws.enumerated()), id: \.offset) { i, w in
-                        specRow("Whoop · Actividad \(i + 1)", (w.sportName ?? "—").replacingOccurrences(of: "-", with: " "))
-                        specRow("Duración", w.durationMin.map { "\($0) min" })
-                        specRow("FC media", w.averageHeartRate.map { "\($0) bpm" })
+                        PapelSpecRow(label: "Whoop · Actividad \(i + 1)", value: (w.sportName ?? "—").replacingOccurrences(of: "-", with: " "))
+                        PapelSpecRow(label: "Duración", value: w.durationMin.map { "\($0) min" })
+                        PapelSpecRow(label: "FC media", value: w.averageHeartRate.map { "\($0) bpm" })
                     }
                 } else {
                     Text("Sin actividad registrada por Whoop este día")
@@ -145,16 +134,6 @@ struct DayEditorView: View {
         }
         .padding(16)
         .overlay(Rectangle().stroke(Color.umbralLineaLight, lineWidth: 1))
-    }
-
-    private func specRow(_ label: String, _ value: String?) -> some View {
-        HStack {
-            Text(label).font(UType.label(9)).foregroundStyle(.umbralHumo)
-            Spacer()
-            Text(value ?? "—").font(UType.card(13)).foregroundStyle(.umbralTinta)
-        }
-        .padding(.vertical, 8)
-        .overlay(DashedDivider(color: .umbralLineaLight), alignment: .bottom)
     }
 
     @ViewBuilder

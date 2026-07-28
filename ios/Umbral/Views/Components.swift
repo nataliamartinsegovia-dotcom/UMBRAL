@@ -102,6 +102,78 @@ struct GhostButton: View {
     }
 }
 
+/// Espejo papel de PrimaryButton/GhostButton — polaridad invertida (regla 01),
+/// mismo acento teja para el estado destructivo (regla 02: un solo acento,
+/// nunca el rojo de sistema).
+struct PapelPrimaryButton: View {
+    let title: String
+    var destructive: Bool = false
+    var action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 14, weight: .medium))
+                .padding(.horizontal, 20).padding(.vertical, 12)
+                .foregroundStyle(destructive ? .white : Color.umbralPapel)
+                .background(destructive ? Color.umbralTeja : Color.umbralTinta)
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+struct PapelGhostButton: View {
+    let title: String
+    var tone: Color = .umbralTinta
+    var action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 14, weight: .medium))
+                .padding(.horizontal, 20).padding(.vertical, 12)
+                .foregroundStyle(tone)
+                .overlay(Rectangle().stroke(tone, lineWidth: 1))
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+/// Campo de formulario en polaridad papel — promovido desde DayEditorView,
+/// lo reutilizan WHOOP/GitHub/Datos y privacidad en el panel de usuario.
+struct PapelField<Content: View>: View {
+    let label: String
+    @ViewBuilder var content: () -> Content
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(label).capLabel(opacity: 0.6).foregroundStyle(.umbralTinta)
+            content()
+                .font(.system(size: 14))
+                .foregroundStyle(.umbralTinta)
+                .padding(10)
+                .overlay(Rectangle().stroke(Color.umbralLineaLight, lineWidth: 1))
+        }
+    }
+}
+
+/// Fila de especificación en polaridad papel — label fino + dato, separados
+/// por línea punteada. Promovida desde DayEditorView/RegistroDetailView.
+struct PapelSpecRow: View {
+    let label: String
+    let value: String?
+
+    var body: some View {
+        HStack {
+            Text(label).font(UType.label(9)).foregroundStyle(.umbralHumo)
+            Spacer()
+            Text(value ?? "—").font(UType.card(13)).foregroundStyle(.umbralTinta)
+        }
+        .padding(.vertical, 8)
+        .overlay(DashedDivider(color: .umbralLineaLight), alignment: .bottom)
+    }
+}
+
 struct MetricCell: View {
     let label: String
     let value: String

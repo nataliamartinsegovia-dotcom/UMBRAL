@@ -28,7 +28,10 @@ enum BackgroundSync {
         try? BGTaskScheduler.shared.submit(request)
     }
 
-    private static func nextRun() -> Date {
+    /// Expuesto (no private) para que el panel de usuario pueda mostrar
+    /// "próxima sincronización" — es solo lectura de la preferencia, sin
+    /// efectos secundarios.
+    static func nextRun() -> Date {
         let hour = UserDefaults.standard.object(forKey: "umbral.autoSyncHour") as? Int ?? 8
         let cal = Calendar.current
         var comps = cal.dateComponents([.year, .month, .day], from: Date())

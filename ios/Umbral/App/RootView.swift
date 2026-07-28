@@ -26,7 +26,7 @@ struct RootView: View {
         }
         .preferredColorScheme(.dark)
         .task { await store.refreshAll() }
-        .sheet(isPresented: $store.showUserPanel) { UserPanel(store: store) }
+        .sheet(isPresented: $store.showUserPanel) { PanelRoot(store: store) }
         .alert("Umbral", isPresented: Binding(
             get: { store.errorMessage != nil }, set: { if !$0 { store.errorMessage = nil } }
         )) {

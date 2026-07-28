@@ -209,6 +209,35 @@ final class UmbralStore: ObservableObject {
 
     var hasToken: Bool { !token.isEmpty }
 
+    func githubDisconnect() {
+        token = ""
+        repo = UMetrics.defaultRepo
+    }
+
+    /// Días consecutivos hacia atrás desde hoy con actividad registrada por
+    /// Whoop, cortando en el primer hueco. Si hoy aún no tiene workout
+    /// registrado, empieza en 0 — no adelanta el día antes de que cierre.
+    var currentStreak: Int {
+        var count = 0
+        var iso = today
+        while let day = byDate[iso], !(day.workouts ?? []).isEmpty {
+            count += 1
+            iso = UDate.add(iso, -1)
+        }
+        return count
+    }
+
+    /// Borra credenciales y preferencias locales — no toca nada del
+    /// repositorio de GitHub, solo lo que vive en este iPhone.
+    func wipeLocalData() {
+        token = ""
+        repo = UMetrics.defaultRepo
+        whoopClientId = ""
+        whoopClientSecret = ""
+        whoopDisconnect()
+        autoSyncHour = 8
+    }
+
     // MARK: - Carga
 
     func load() async {

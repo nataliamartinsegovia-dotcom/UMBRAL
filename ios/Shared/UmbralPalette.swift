@@ -37,4 +37,8 @@ enum UMetrics {
     static let raceDateISO = "2026-12-12"
     static let defaultRepo = "nataliamartinsegovia-dotcom/UMBRAL"
     static let defaultBranch = "main"
+    static let raceName = "Hyrox Madrid"
+    /// Hecho de esta build de la app, no dato de usuario en runtime —
+    /// por eso vive aquí junto a threshold/raceDateISO, no en UserDefaults.
+    static let ownerName = "Natalia"
 }
