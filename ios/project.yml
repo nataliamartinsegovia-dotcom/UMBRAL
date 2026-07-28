@@ -42,7 +42,7 @@ targets:
         TARGETED_DEVICE_FAMILY: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
-        DEVELOPMENT_TEAM: ""
+        DEVELOPMENT_TEAM: YY5DL994SR
         CODE_SIGN_STYLE: Automatic
     entitlements:
       path: Umbral/Umbral.entitlements
@@ -72,7 +72,7 @@ targets:
         CURRENT_PROJECT_VERSION: "1"
         SWIFT_VERSION: "5.0"
         TARGETED_DEVICE_FAMILY: "1"
-        DEVELOPMENT_TEAM: ""
+        DEVELOPMENT_TEAM: YY5DL994SR
         CODE_SIGN_STYLE: Automatic
     entitlements:
       path: UmbralWidget/UmbralWidget.entitlements
