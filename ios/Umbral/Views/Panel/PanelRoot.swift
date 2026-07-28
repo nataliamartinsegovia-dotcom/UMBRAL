@@ -11,6 +11,10 @@ struct PanelRoot: View {
 
     private var nextReto: RetoItem? { store.nextReto }
     private var raceDays: Int? { nextReto.map { UDate.daysUntil($0.fecha, from: store.today) } }
+    private var displayName: String {
+        let full = store.perfil.nombreCompleto
+        return full.isEmpty ? "Hola" : full
+    }
 
     var body: some View {
         NavigationStack {
@@ -40,7 +44,7 @@ struct PanelRoot: View {
     private var header: some View {
         VStack(alignment: .leading, spacing: 10) {
             UmbralIsotype(size: 26, color: .umbralTinta, dotColor: .umbralTeja)
-            Text("\(UMetrics.ownerName).")
+            Text("\(displayName).")
                 .font(UType.section(34))
                 .foregroundStyle(.umbralTinta)
             Text(statusLine)
@@ -84,13 +88,9 @@ struct PanelRoot: View {
                 PerfilPanelView(store: store)
             }
             DashedDivider(color: .umbralLineaLight.opacity(0.6))
-            navRow(icon: AnyView(
-                UmbralSyncIcon()
-                    .umbralIconStyle(store.whoopConnected ? .umbralTeja : .umbralTinta.opacity(0.7), lineWidth: 1.25)
-                    .frame(width: 18, height: 18)
-            ), title: "WHOOP", subtitle: "Lectura en vivo · sincronización",
-               value: store.whoopConnected ? "Conectado" : "Sin conectar",
-               valueColor: store.whoopConnected ? .umbralTeja : .umbralHumo) {
+            navRow(title: "WHOOP", subtitle: "Lectura en vivo · sincronización",
+                   value: store.whoopConnected ? "Conectado" : "Sin conectar",
+                   valueColor: store.whoopConnected ? .umbralTeja : .umbralHumo) {
                 WhoopPanelView(store: store)
             }
             DashedDivider(color: .umbralLineaLight.opacity(0.6))

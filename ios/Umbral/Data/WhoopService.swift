@@ -186,4 +186,32 @@ enum WhoopAPIService {
             )
         }
     }
+
+    struct Profile { let firstName: String?; let lastName: String? }
+    struct BodyMeasurement { let heightMeter: Double?; let weightKg: Double? }
+
+    private static func getObject<T: Decodable>(_ path: String, token: String) async throws -> T {
+        var req = URLRequest(url: URL(string: WhoopConfig.apiBase + path)!)
+        req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        let (data, response) = try await URLSession.shared.data(for: req)
+        guard let http = response as? HTTPURLResponse, http.statusCode == 200 else {
+            let code = (response as? HTTPURLResponse)?.statusCode ?? -1
+            throw WhoopError.httpError(code, "GET \(path)")
+        }
+        return try JSONDecoder().decode(T.self, from: data)
+    }
+
+    /// GET /user/profile/basic — nombre y apellidos tal como los tiene registrados en WHOOP.
+    static func fetchProfile(token: String) async throws -> Profile {
+        struct Raw: Decodable { let first_name: String?; let last_name: String? }
+        let r: Raw = try await getObject("/user/profile/basic", token: token)
+        return Profile(firstName: r.first_name, lastName: r.last_name)
+    }
+
+    /// GET /user/measurement/body — altura en metros, peso en kg.
+    static func fetchBodyMeasurement(token: String) async throws -> BodyMeasurement {
+        struct Raw: Decodable { let height_meter: Double?; let weight_kilogram: Double? }
+        let r: Raw = try await getObject("/user/measurement/body", token: token)
+        return BodyMeasurement(heightMeter: r.height_meter, weightKg: r.weight_kilogram)
+    }
 }

@@ -188,6 +188,31 @@ final class UmbralStore: ObservableObject {
         }
     }
 
+    /// Rellena nombre/apellidos/altura/peso desde el propio perfil de WHOOP
+    /// (ya tenemos el scope read:profile/read:body_measurement de la app
+    /// registrada). No pisa un valor ya editado a mano si WHOOP no lo trae.
+    @Published private(set) var importingWhoopProfile = false
+
+    func importFromWhoop() async {
+        guard whoopConnected else { return }
+        importingWhoopProfile = true
+        defer { importingWhoopProfile = false }
+        do {
+            let token = try await whoopValidAccessToken()
+            async let profileR = WhoopAPIService.fetchProfile(token: token)
+            async let bodyR = WhoopAPIService.fetchBodyMeasurement(token: token)
+            let profile = try await profileR
+            let body = try await bodyR
+            if let fn = profile.firstName, !fn.isEmpty { perfil.nombre = fn }
+            if let ln = profile.lastName, !ln.isEmpty { perfil.apellidos = ln }
+            if let h = body.heightMeter, h > 0 { perfil.alturaCm = Int((h * 100).rounded()) }
+            if let w = body.weightKg, w > 0 { perfil.pesoKg = (w * 10).rounded() / 10 }
+            markDirty()
+        } catch {
+            errorMessage = "WHOOP: \(error.localizedDescription)"
+        }
+    }
+
     /// Deja una foto de "hoy" en el App Group para que el widget la lea sin
     /// tener que hablar con WHOOP/GitHub por su cuenta, y le pide refrescar.
     private func publishWidgetSnapshot() {
@@ -378,7 +403,42 @@ final class UmbralStore: ObservableObject {
         planes.first { $0.semana == monday }?.bloque ?? "—"
     }
 
-    // MARK: - Perfil (bio + próximos retos)
+    // MARK: - Perfil (datos personales, bio, próximos retos)
+
+    var nombreBinding: Binding<String> {
+        Binding(
+            get: { self.perfil.nombre ?? "" },
+            set: { self.perfil.nombre = $0.isEmpty ? nil : $0; self.markDirty() }
+        )
+    }
+
+    var apellidosBinding: Binding<String> {
+        Binding(
+            get: { self.perfil.apellidos ?? "" },
+            set: { self.perfil.apellidos = $0.isEmpty ? nil : $0; self.markDirty() }
+        )
+    }
+
+    var edadBinding: Binding<String> {
+        Binding(
+            get: { self.perfil.edad.map(String.init) ?? "" },
+            set: { self.perfil.edad = Int($0); self.markDirty() }
+        )
+    }
+
+    var alturaBinding: Binding<String> {
+        Binding(
+            get: { self.perfil.alturaCm.map(String.init) ?? "" },
+            set: { self.perfil.alturaCm = Int($0); self.markDirty() }
+        )
+    }
+
+    var pesoBinding: Binding<String> {
+        Binding(
+            get: { self.perfil.pesoKg.map { String(format: "%.1f", $0) } ?? "" },
+            set: { self.perfil.pesoKg = Double($0.replacingOccurrences(of: ",", with: ".")); self.markDirty() }
+        )
+    }
 
     var bioBinding: Binding<String> {
         Binding(

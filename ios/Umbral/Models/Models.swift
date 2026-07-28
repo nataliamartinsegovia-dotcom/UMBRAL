@@ -307,19 +307,46 @@ struct RetoItem: Codable, Identifiable, Hashable {
 }
 
 struct PerfilUsuario: Codable, Hashable {
+    var nombre: String?
+    var apellidos: String?
+    var edad: Int?
+    var alturaCm: Int?
+    var pesoKg: Double?
     var bio: String?
     var retos: [RetoItem]
 
-    init(bio: String? = nil, retos: [RetoItem] = []) {
+    init(nombre: String? = nil, apellidos: String? = nil, edad: Int? = nil,
+         alturaCm: Int? = nil, pesoKg: Double? = nil, bio: String? = nil, retos: [RetoItem] = []) {
+        self.nombre = nombre
+        self.apellidos = apellidos
+        self.edad = edad
+        self.alturaCm = alturaCm
+        self.pesoKg = pesoKg
         self.bio = bio
         self.retos = retos
     }
 
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
+        nombre = try c.decodeIfPresent(String.self, forKey: .nombre)
+        apellidos = try c.decodeIfPresent(String.self, forKey: .apellidos)
+        edad = try c.decodeIfPresent(Int.self, forKey: .edad)
+        alturaCm = try c.decodeIfPresent(Int.self, forKey: .alturaCm)
+        pesoKg = try c.decodeIfPresent(Double.self, forKey: .pesoKg)
         bio = try c.decodeIfPresent(String.self, forKey: .bio)
         retos = try c.decodeIfPresent([RetoItem].self, forKey: .retos) ?? []
     }
 
-    enum CodingKeys: String, CodingKey { case bio, retos }
+    enum CodingKeys: String, CodingKey {
+        case nombre, apellidos, edad, bio, retos
+        case alturaCm = "altura_cm"
+        case pesoKg = "peso_kg"
+    }
+
+    var nombreCompleto: String {
+        [nombre, apellidos]
+            .compactMap { $0?.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+    }
 }

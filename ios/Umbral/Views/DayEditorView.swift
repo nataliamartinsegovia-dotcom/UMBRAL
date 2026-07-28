@@ -136,14 +136,26 @@ struct DayEditorView: View {
         .overlay(Rectangle().stroke(Color.umbralLineaLight, lineWidth: 1))
     }
 
-    @ViewBuilder
+    /// Siempre visible, nunca desaparece en blanco — no hay botón "Guardar"
+    /// a propósito (autosave), pero sin esto no queda claro si de verdad
+    /// guardó o no.
     private var autosaveStatus: some View {
-        if store.dirty || store.saving {
-            Text(store.saving ? "GUARDANDO…" : "SIN GUARDAR — SE GUARDA SOLO")
-                .font(UType.label(9))
-                .foregroundStyle(.umbralHumo)
-                .frame(maxWidth: .infinity, alignment: .center)
+        HStack(spacing: 6) {
+            UmbralSyncIcon()
+                .umbralIconStyle(store.saving ? .umbralTeja : .umbralHumo, lineWidth: 1.1)
+                .frame(width: 11, height: 11)
+                .rotationEffect(.degrees(store.saving ? 360 : 0))
+                .animation(store.saving ? .linear(duration: 1.1).repeatForever(autoreverses: false) : .default, value: store.saving)
+            Text(autosaveLabel).font(UType.label(9))
         }
+        .foregroundStyle(store.dirty && !store.saving ? .umbralTeja : .umbralHumo)
+        .frame(maxWidth: .infinity, alignment: .center)
+    }
+
+    private var autosaveLabel: String {
+        if store.saving { return "GUARDANDO…" }
+        if store.dirty { return "SIN GUARDAR — SE GUARDA SOLO" }
+        return "GUARDADO"
     }
 }
 

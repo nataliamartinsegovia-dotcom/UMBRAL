@@ -15,9 +15,11 @@ struct PerfilPanelView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("SOBRE TI").capLabel(opacity: 0.6).foregroundStyle(.umbralTinta)
+                    Text("QUIÉN ERES").capLabel(opacity: 0.6).foregroundStyle(.umbralTinta)
                     Text("Perfil.").font(UType.section(24)).foregroundStyle(.umbralTinta)
                 }
+
+                datosPersonales
 
                 PapelField(label: "Sobre ti") {
                     ZStack(alignment: .topLeading) {
@@ -58,6 +60,59 @@ struct PerfilPanelView: View {
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbarColorScheme(.light, for: .navigationBar)
         .sheet(isPresented: $mostrarNuevoReto) { NuevoRetoSheet(store: store) }
+    }
+
+    private var datosPersonales: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text("Datos personales").font(UType.card(17)).foregroundStyle(.umbralTinta)
+                Spacer()
+                if store.whoopConnected {
+                    Button {
+                        Task { await store.importFromWhoop() }
+                    } label: {
+                        HStack(spacing: 5) {
+                            if store.importingWhoopProfile {
+                                ProgressView().scaleEffect(0.6)
+                            } else {
+                                UmbralSyncIcon().umbralIconStyle(.umbralTeja, lineWidth: 1.1).frame(width: 11, height: 11)
+                            }
+                            Text("Rellenar desde WHOOP").font(.system(size: 11, weight: .medium))
+                        }
+                        .foregroundStyle(.umbralTeja)
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(store.importingWhoopProfile)
+                }
+            }
+
+            HStack(spacing: 10) {
+                PapelField(label: "Nombre") {
+                    TextField("", text: store.nombreBinding).textContentType(.givenName)
+                }
+                PapelField(label: "Apellidos") {
+                    TextField("", text: store.apellidosBinding).textContentType(.familyName)
+                }
+            }
+
+            HStack(spacing: 10) {
+                PapelField(label: "Edad") {
+                    TextField("", text: store.edadBinding).keyboardType(.numberPad)
+                }
+                PapelField(label: "Altura (cm)") {
+                    TextField("", text: store.alturaBinding).keyboardType(.numberPad)
+                }
+                PapelField(label: "Peso (kg)") {
+                    TextField("", text: store.pesoBinding).keyboardType(.decimalPad)
+                }
+            }
+
+            if !store.whoopConnected {
+                Text("Conecta WHOOP (en el panel de usuario) para rellenar altura y peso automáticamente. La edad hay que escribirla a mano — WHOOP no la comparte.")
+                    .font(.system(size: 11))
+                    .foregroundStyle(.umbralHumo)
+            }
+        }
     }
 
     private func retoRow(_ reto: RetoItem) -> some View {

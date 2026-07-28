@@ -49,7 +49,4 @@ enum UMetrics {
     static let threshold = 67.0
     static let defaultRepo = "nataliamartinsegovia-dotcom/UMBRAL"
     static let defaultBranch = "main"
-    /// Hecho de esta build de la app, no dato de usuario en runtime —
-    /// por eso vive aquí, no en UserDefaults.
-    static let ownerName = "Natalia"
 }
