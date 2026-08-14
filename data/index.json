@@ -1,5 +1,15 @@
 [
   {
+    "date": "2026-08-14",
+    "notes": "",
+    "photos": [],
+    "tipo": null,
+    "etiquetas": [],
+    "recovery_score": 50.0,
+    "hrv_rmssd_milli": 107.5,
+    "resting_heart_rate": 54.0
+  },
+  {
     "date": "2026-08-13",
     "notes": "",
     "photos": [],
@@ -9,7 +19,22 @@
     "hrv_rmssd_milli": 131.9,
     "resting_heart_rate": 49.0,
     "sleep_performance_percentage": 24.0,
-    "sleep_efficiency_percentage": 92.856445
+    "sleep_efficiency_percentage": 92.856445,
+    "day_strain": 2.6,
+    "workouts": [
+      {
+        "sport_name": "dog-walking",
+        "strain": 0.7,
+        "average_heart_rate": 86,
+        "duration_min": 27
+      },
+      {
+        "sport_name": "functional-fitness",
+        "strain": 13.7,
+        "average_heart_rate": 126,
+        "duration_min": 51
+      }
+    ]
   },
   {
     "date": "2026-08-12",
@@ -20,7 +45,7 @@
     "recovery_score": 85.0,
     "hrv_rmssd_milli": 129.4,
     "resting_heart_rate": 52.0,
-    "day_strain": 2.6,
+    "day_strain": 13.8,
     "sleep_performance_percentage": 59.0,
     "sleep_efficiency_percentage": 93.14876,
     "workouts": [
