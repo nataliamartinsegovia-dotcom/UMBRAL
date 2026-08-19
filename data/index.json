@@ -1,5 +1,33 @@
 [
   {
+    "date": "2026-08-19",
+    "notes": "",
+    "photos": [],
+    "tipo": null,
+    "etiquetas": [],
+    "recovery_score": 67.0,
+    "hrv_rmssd_milli": 101.4,
+    "resting_heart_rate": 57.0
+  },
+  {
+    "date": "2026-08-18",
+    "notes": "",
+    "photos": [],
+    "tipo": null,
+    "etiquetas": [],
+    "day_strain": 0.4,
+    "sleep_performance_percentage": 73.0,
+    "sleep_efficiency_percentage": 76.746315,
+    "workouts": [
+      {
+        "sport_name": "functional-fitness",
+        "strain": 13.0,
+        "average_heart_rate": 113,
+        "duration_min": 59
+      }
+    ]
+  },
+  {
     "date": "2026-08-17",
     "notes": "",
     "photos": [],
@@ -21,7 +49,8 @@
         "average_heart_rate": 102,
         "duration_min": 36
       }
-    ]
+    ],
+    "day_strain": 13.1
   },
   {
     "date": "2026-08-16",

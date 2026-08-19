@@ -1,0 +1,18 @@
+{
+  "date": "2026-08-18",
+  "notes": "",
+  "photos": [],
+  "tipo": null,
+  "etiquetas": [],
+  "day_strain": 0.4,
+  "sleep_performance_percentage": 73.0,
+  "sleep_efficiency_percentage": 76.746315,
+  "workouts": [
+    {
+      "sport_name": "functional-fitness",
+      "strain": 13.0,
+      "average_heart_rate": 113,
+      "duration_min": 59
+    }
+  ]
+}
