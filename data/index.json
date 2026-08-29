@@ -1,5 +1,17 @@
 [
   {
+    "date": "2026-08-29",
+    "notes": "",
+    "photos": [],
+    "tipo": null,
+    "etiquetas": [],
+    "recovery_score": 15.0,
+    "hrv_rmssd_milli": 43.3,
+    "resting_heart_rate": 66.0,
+    "sleep_performance_percentage": 14.0,
+    "sleep_efficiency_percentage": 73.10708
+  },
+  {
     "date": "2026-08-28",
     "notes": "",
     "photos": [],
@@ -15,7 +27,10 @@
         "average_heart_rate": 121,
         "duration_min": 56
       }
-    ]
+    ],
+    "day_strain": 3.7,
+    "sleep_performance_percentage": 78.0,
+    "sleep_efficiency_percentage": 96.6356
   },
   {
     "date": "2026-08-27",
