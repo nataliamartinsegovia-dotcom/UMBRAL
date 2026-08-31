@@ -1,0 +1,30 @@
+{
+  "date": "2026-08-31",
+  "notes": "",
+  "photos": [],
+  "tipo": null,
+  "etiquetas": [],
+  "recovery_score": 86.0,
+  "hrv_rmssd_milli": 124.7,
+  "resting_heart_rate": 53.0,
+  "workouts": [
+    {
+      "sport_name": "running",
+      "strain": 15.1,
+      "average_heart_rate": 168,
+      "duration_min": 34
+    },
+    {
+      "sport_name": "dog-walking",
+      "strain": 4.0,
+      "average_heart_rate": 90,
+      "duration_min": 9
+    },
+    {
+      "sport_name": "walking",
+      "strain": 4.4,
+      "average_heart_rate": 98,
+      "duration_min": 40
+    }
+  ]
+}
