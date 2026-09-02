@@ -14,5 +14,8 @@
       "average_heart_rate": 141,
       "duration_min": 53
     }
-  ]
+  ],
+  "day_strain": 4.2,
+  "sleep_performance_percentage": 28.0,
+  "sleep_efficiency_percentage": 89.48348
 }
