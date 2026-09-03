@@ -8,5 +8,14 @@
   "hrv_rmssd_milli": 65.0,
   "resting_heart_rate": 65.0,
   "sleep_performance_percentage": 20.0,
-  "sleep_efficiency_percentage": 90.21481
+  "sleep_efficiency_percentage": 90.21481,
+  "day_strain": 2.3,
+  "workouts": [
+    {
+      "sport_name": "functional-fitness",
+      "strain": 14.9,
+      "average_heart_rate": 136,
+      "duration_min": 54
+    }
+  ]
 }
