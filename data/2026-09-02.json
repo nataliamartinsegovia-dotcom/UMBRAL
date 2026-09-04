@@ -7,9 +7,9 @@
   "recovery_score": 8.0,
   "hrv_rmssd_milli": 65.0,
   "resting_heart_rate": 65.0,
-  "sleep_performance_percentage": 20.0,
-  "sleep_efficiency_percentage": 90.21481,
-  "day_strain": 2.3,
+  "sleep_performance_percentage": 1.0,
+  "sleep_efficiency_percentage": 43.78637,
+  "day_strain": 2.7,
   "workouts": [
     {
       "sport_name": "functional-fitness",
