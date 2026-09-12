@@ -1,0 +1,18 @@
+{
+  "date": "2026-09-12",
+  "notes": "",
+  "photos": [],
+  "tipo": null,
+  "etiquetas": [],
+  "recovery_score": 48.0,
+  "hrv_rmssd_milli": 99.2,
+  "resting_heart_rate": 54.0,
+  "workouts": [
+    {
+      "sport_name": "functional-fitness",
+      "strain": 13.5,
+      "average_heart_rate": 115,
+      "duration_min": 58
+    }
+  ]
+}
