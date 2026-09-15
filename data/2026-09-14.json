@@ -4,10 +4,18 @@
   "photos": [],
   "tipo": null,
   "etiquetas": [],
-  "day_strain": 4.1,
+  "day_strain": 17.1,
   "recovery_score": 70.0,
   "hrv_rmssd_milli": 141.3,
   "resting_heart_rate": 48.0,
   "sleep_performance_percentage": 59.0,
-  "sleep_efficiency_percentage": 98.168434
+  "sleep_efficiency_percentage": 98.168434,
+  "workouts": [
+    {
+      "sport_name": "functional-fitness",
+      "strain": 16.9,
+      "average_heart_rate": 141,
+      "duration_min": 59
+    }
+  ]
 }
