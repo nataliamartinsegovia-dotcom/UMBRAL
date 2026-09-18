@@ -1,5 +1,15 @@
 [
   {
+    "date": "2026-09-18",
+    "notes": "",
+    "photos": [],
+    "tipo": null,
+    "etiquetas": [],
+    "recovery_score": 53.0,
+    "hrv_rmssd_milli": 96.0,
+    "resting_heart_rate": 56.0
+  },
+  {
     "date": "2026-09-17",
     "notes": "",
     "photos": [],
@@ -7,7 +17,10 @@
     "etiquetas": [],
     "recovery_score": 35.0,
     "hrv_rmssd_milli": 80.2,
-    "resting_heart_rate": 60.0
+    "resting_heart_rate": 60.0,
+    "day_strain": 4.2,
+    "sleep_performance_percentage": 83.0,
+    "sleep_efficiency_percentage": 94.33912
   },
   {
     "date": "2026-09-16",
@@ -18,7 +31,7 @@
     "recovery_score": 35.0,
     "hrv_rmssd_milli": 87.4,
     "resting_heart_rate": 59.0,
-    "day_strain": 4.2,
+    "day_strain": 4.7,
     "sleep_performance_percentage": 73.0,
     "sleep_efficiency_percentage": 82.95475
   },
