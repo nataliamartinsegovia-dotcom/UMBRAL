@@ -1,0 +1,18 @@
+{
+  "date": "2026-09-27",
+  "notes": "",
+  "photos": [],
+  "tipo": null,
+  "etiquetas": [],
+  "recovery_score": 72.0,
+  "hrv_rmssd_milli": 112.8,
+  "resting_heart_rate": 52.0,
+  "workouts": [
+    {
+      "sport_name": "walking",
+      "strain": 4.1,
+      "average_heart_rate": 94,
+      "duration_min": 15
+    }
+  ]
+}
