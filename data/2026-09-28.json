@@ -6,5 +6,6 @@
   "etiquetas": [],
   "recovery_score": 75.0,
   "hrv_rmssd_milli": 112.9,
-  "resting_heart_rate": 54.0
+  "resting_heart_rate": 54.0,
+  "day_strain": 11.7
 }
