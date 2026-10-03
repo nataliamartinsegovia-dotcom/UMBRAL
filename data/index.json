@@ -10,6 +10,12 @@
     "resting_heart_rate": 53.0,
     "workouts": [
       {
+        "sport_name": "functional-fitness",
+        "strain": 14.0,
+        "average_heart_rate": 126,
+        "duration_min": 51
+      },
+      {
         "sport_name": "walking",
         "strain": 4.3,
         "average_heart_rate": 97,
@@ -26,7 +32,7 @@
     "recovery_score": 29.0,
     "hrv_rmssd_milli": 70.3,
     "resting_heart_rate": 62.0,
-    "day_strain": 4.6,
+    "day_strain": 14.3,
     "sleep_performance_percentage": 77.0,
     "sleep_efficiency_percentage": 83.9988,
     "workouts": [
