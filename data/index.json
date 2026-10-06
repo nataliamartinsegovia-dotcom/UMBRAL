@@ -1,5 +1,15 @@
 [
   {
+    "date": "2026-10-06",
+    "notes": "",
+    "photos": [],
+    "tipo": null,
+    "etiquetas": [],
+    "recovery_score": 76.0,
+    "hrv_rmssd_milli": 131.4,
+    "resting_heart_rate": 45.0
+  },
+  {
     "date": "2026-10-05",
     "notes": "",
     "photos": [],
@@ -7,7 +17,10 @@
     "etiquetas": [],
     "recovery_score": 57.0,
     "hrv_rmssd_milli": 100.2,
-    "resting_heart_rate": 54.0
+    "resting_heart_rate": 54.0,
+    "day_strain": 4.0,
+    "sleep_performance_percentage": 70.0,
+    "sleep_efficiency_percentage": 82.2724
   },
   {
     "date": "2026-10-04",
