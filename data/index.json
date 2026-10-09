@@ -7,7 +7,15 @@
     "etiquetas": [],
     "recovery_score": 78.0,
     "hrv_rmssd_milli": 123.7,
-    "resting_heart_rate": 49.0
+    "resting_heart_rate": 49.0,
+    "workouts": [
+      {
+        "sport_name": "functional-fitness",
+        "strain": 15.1,
+        "average_heart_rate": 145,
+        "duration_min": 40
+      }
+    ]
   },
   {
     "date": "2026-10-07",
@@ -18,7 +26,7 @@
     "recovery_score": 55.0,
     "hrv_rmssd_milli": 99.3,
     "resting_heart_rate": 55.0,
-    "day_strain": 4.1,
+    "day_strain": 15.6,
     "sleep_performance_percentage": 80.0,
     "sleep_efficiency_percentage": 87.338554,
     "workouts": [
