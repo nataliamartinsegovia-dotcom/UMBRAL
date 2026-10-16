@@ -6,5 +6,16 @@
   "etiquetas": [],
   "recovery_score": 33.0,
   "hrv_rmssd_milli": 97.4,
-  "resting_heart_rate": 56.0
+  "resting_heart_rate": 56.0,
+  "day_strain": 4.1,
+  "sleep_performance_percentage": 65.0,
+  "sleep_efficiency_percentage": 77.28902,
+  "workouts": [
+    {
+      "sport_name": "functional-fitness",
+      "strain": 13.1,
+      "average_heart_rate": 115,
+      "duration_min": 55
+    }
+  ]
 }

@@ -1,5 +1,15 @@
 [
   {
+    "date": "2026-10-16",
+    "notes": "",
+    "photos": [],
+    "tipo": null,
+    "etiquetas": [],
+    "recovery_score": 51.0,
+    "hrv_rmssd_milli": 105.2,
+    "resting_heart_rate": 54.0
+  },
+  {
     "date": "2026-10-15",
     "notes": "",
     "photos": [],
@@ -7,7 +17,18 @@
     "etiquetas": [],
     "recovery_score": 33.0,
     "hrv_rmssd_milli": 97.4,
-    "resting_heart_rate": 56.0
+    "resting_heart_rate": 56.0,
+    "day_strain": 4.1,
+    "sleep_performance_percentage": 65.0,
+    "sleep_efficiency_percentage": 77.28902,
+    "workouts": [
+      {
+        "sport_name": "functional-fitness",
+        "strain": 13.1,
+        "average_heart_rate": 115,
+        "duration_min": 55
+      }
+    ]
   },
   {
     "date": "2026-10-14",
@@ -18,7 +39,7 @@
     "recovery_score": 69.0,
     "hrv_rmssd_milli": 112.7,
     "resting_heart_rate": 46.0,
-    "day_strain": 4.0,
+    "day_strain": 13.2,
     "sleep_performance_percentage": 58.0,
     "sleep_efficiency_percentage": 85.89791,
     "workouts": [
