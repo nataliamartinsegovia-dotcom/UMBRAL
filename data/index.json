@@ -1,5 +1,13 @@
 [
   {
+    "date": "2026-10-22",
+    "notes": "",
+    "photos": [],
+    "tipo": null,
+    "etiquetas": [],
+    "day_strain": 2.8
+  },
+  {
     "date": "2026-10-21",
     "notes": "",
     "photos": [],
@@ -26,7 +34,7 @@
         "duration_min": 49
       }
     ],
-    "day_strain": 4.4,
+    "day_strain": 4.3,
     "sleep_performance_percentage": 74.0,
     "sleep_efficiency_percentage": 84.078514
   },
