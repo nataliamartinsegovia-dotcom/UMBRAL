@@ -1,11 +1,39 @@
 [
   {
+    "date": "2026-10-24",
+    "notes": "",
+    "photos": [],
+    "tipo": null,
+    "etiquetas": [],
+    "recovery_score": 57.0,
+    "hrv_rmssd_milli": 92.0,
+    "resting_heart_rate": 58.0
+  },
+  {
+    "date": "2026-10-23",
+    "notes": "",
+    "photos": [],
+    "tipo": null,
+    "etiquetas": [],
+    "day_strain": 4.1,
+    "sleep_performance_percentage": 71.0,
+    "sleep_efficiency_percentage": 76.89554,
+    "workouts": [
+      {
+        "sport_name": "walking",
+        "strain": 4.3,
+        "average_heart_rate": 92,
+        "duration_min": 18
+      }
+    ]
+  },
+  {
     "date": "2026-10-22",
     "notes": "",
     "photos": [],
     "tipo": null,
     "etiquetas": [],
-    "day_strain": 2.8
+    "day_strain": 4.4
   },
   {
     "date": "2026-10-21",
