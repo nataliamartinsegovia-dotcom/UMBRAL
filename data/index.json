@@ -1,5 +1,15 @@
 [
   {
+    "date": "2026-11-05",
+    "notes": "",
+    "photos": [],
+    "tipo": null,
+    "etiquetas": [],
+    "recovery_score": 62.0,
+    "hrv_rmssd_milli": 84.3,
+    "resting_heart_rate": 58.0
+  },
+  {
     "date": "2026-11-04",
     "notes": "",
     "photos": [],
