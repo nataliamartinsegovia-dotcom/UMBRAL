@@ -6,5 +6,25 @@
   "etiquetas": [],
   "recovery_score": 62.0,
   "hrv_rmssd_milli": 84.3,
-  "resting_heart_rate": 58.0
+  "resting_heart_rate": 58.0,
+  "workouts": [
+    {
+      "sport_name": "rowing",
+      "strain": 11.0,
+      "average_heart_rate": 116,
+      "duration_min": 35
+    },
+    {
+      "sport_name": "activity",
+      "strain": 5.0,
+      "average_heart_rate": 106,
+      "duration_min": 21
+    },
+    {
+      "sport_name": "gymnastics",
+      "strain": 4.1,
+      "average_heart_rate": 85,
+      "duration_min": 53
+    }
+  ]
 }

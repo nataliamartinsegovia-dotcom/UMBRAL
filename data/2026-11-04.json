@@ -8,8 +8,8 @@
   "recovery_score": 77.0,
   "hrv_rmssd_milli": 148.0,
   "resting_heart_rate": 50.0,
-  "sleep_performance_percentage": 61.0,
-  "sleep_efficiency_percentage": 86.48466,
+  "sleep_performance_percentage": 77.0,
+  "sleep_efficiency_percentage": 92.59961,
   "workouts": [
     {
       "sport_name": "walking",
