@@ -1,5 +1,18 @@
 [
   {
+    "date": "2026-11-13",
+    "notes": "",
+    "photos": [],
+    "tipo": null,
+    "etiquetas": [],
+    "day_strain": 5.0,
+    "recovery_score": 54.0,
+    "hrv_rmssd_milli": 120.4,
+    "resting_heart_rate": 52.0,
+    "sleep_performance_percentage": 51.0,
+    "sleep_efficiency_percentage": 98.22125
+  },
+  {
     "date": "2026-11-12",
     "notes": "",
     "photos": [],
@@ -36,7 +49,7 @@
         "duration_min": 31
       }
     ],
-    "day_strain": 12.7,
+    "day_strain": 12.8,
     "sleep_performance_percentage": 77.0,
     "sleep_efficiency_percentage": 97.85994
   },
