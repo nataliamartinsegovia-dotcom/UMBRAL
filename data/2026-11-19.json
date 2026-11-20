@@ -8,5 +8,6 @@
   "hrv_rmssd_milli": 90.4,
   "resting_heart_rate": 62.0,
   "sleep_performance_percentage": 23.0,
-  "sleep_efficiency_percentage": 97.85878
+  "sleep_efficiency_percentage": 97.85878,
+  "day_strain": 4.6
 }
