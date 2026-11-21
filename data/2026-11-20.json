@@ -6,5 +6,8 @@
   "etiquetas": [],
   "recovery_score": 83.0,
   "hrv_rmssd_milli": 121.9,
-  "resting_heart_rate": 54.0
+  "resting_heart_rate": 54.0,
+  "day_strain": 16.1,
+  "sleep_performance_percentage": 24.0,
+  "sleep_efficiency_percentage": 98.48529
 }
